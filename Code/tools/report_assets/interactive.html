@@ -1,0 +1,78 @@
+## 系统结构图：从指令到真实输出 {#architecture}
+
+这张图按当前代码的职责划分。点击模块查看对应文件和数据边界；箭头表示主要信息流，不表示中断执行顺序。图中保留硬件急停旁路，传感器与驱动输出没有被混成同一条通信链路。
+
+<div class="diagram-scroll">
+<svg class="system-map" viewBox="0 0 1000 530" role="group" aria-labelledby="system-title system-desc">
+<title id="system-title">MecanumB 系统与软件模块结构</title><desc id="system-desc">Pi 和 ESP32 经串口进入 STM32，授权与控制接收编码器和传感器反馈，经电机联锁驱动 A 板。硬件急停独立关闭电机输出。模块可用 Tab 和回车选择。</desc>
+<defs><marker id="sys-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#52806b"/></marker></defs>
+<rect x="240" y="20" width="510" height="480" rx="18" fill="#f0f5f2" stroke="#a7c0b3"/>
+<text x="265" y="49" class="diagram-label">B 板 / STM32F429 / FreeRTOS</text>
+<g class="map-lines" fill="none" stroke="#52806b" stroke-width="2" marker-end="url(#sys-arrow)">
+<path d="M205 114H270"/><path d="M205 234H270V148"/><path d="M465 127H520"/><path d="M620 169V229"/><path d="M520 273H465" marker-start="url(#sys-arrow)"/><path d="M368 169V200H560V229"/><path d="M465 405H520"/><path d="M368 363V317"/><path d="M715 273H805"/><path d="M895 318V345H680V318"/><path d="M715 420H780V305H805"/>
+</g>
+<text x="212" y="103" class="wire-caption">UART</text><text x="743" y="261" class="wire-caption">PWM / DIR</text><text x="805" y="366" class="wire-caption">编码器反馈 → Control</text><text x="797" y="441" class="wire-caption">电源保持 / 切电</text>
+<g data-module="pi" role="button" tabindex="0" aria-label="查看 Pi 与 ROS 模块" aria-pressed="false"><rect x="15" y="75" width="190" height="80" rx="10"/><text x="110" y="105">Raspberry Pi / ROS 2</text><text x="110" y="132" class="map-sub">cmd_vel · READY · 关机</text></g>
+<g data-module="esp" role="button" tabindex="0" aria-label="查看 ESP32 桥" aria-pressed="false"><rect x="15" y="195" width="190" height="80" rx="10"/><text x="110" y="226">ESP32 无线桥</text><text x="110" y="251" class="map-sub">UART ↔ UDP / RC</text></g>
+<g data-module="host" role="button" tabindex="0" aria-label="查看通信解析模块" aria-pressed="false"><rect x="270" y="85" width="195" height="84" rx="10"/><text x="368" y="116">HostRx / MAVLink</text><text x="368" y="143" class="map-sub">解帧 · 参数 · 指令</text></g>
+<g data-module="safety" role="button" tabindex="0" aria-label="查看安全授权模块" aria-pressed="false"><rect x="520" y="85" width="195" height="84" rx="10"/><text x="618" y="116">Safety / Link</text><text x="618" y="143" class="map-sub">授权 · 期限 · 故障</text></g>
+<g data-module="control" role="button" tabindex="0" aria-label="查看轮速控制模块" aria-pressed="true"><rect x="520" y="229" width="195" height="89" rx="10"/><text x="618" y="261">Control / 1 kHz</text><text x="618" y="288" class="map-sub">逆解 · 斜率 · 轮速 PI</text></g>
+<g data-module="health" role="button" tabindex="0" aria-label="查看健康监测模块" aria-pressed="false"><rect x="270" y="229" width="195" height="89" rx="10"/><text x="368" y="261">Health / 电气保护</text><text x="368" y="288" class="map-sub">ADC · 堵转 · 欠压</text></g>
+<g data-module="sensor" role="button" tabindex="0" aria-label="查看传感器模块" aria-pressed="false"><rect x="270" y="363" width="195" height="84" rx="10"/><text x="368" y="394">SensorRx / Imu</text><text x="368" y="421" class="map-sub">IMU · GNSS · LD06 · SBUS</text></g>
+<g data-module="support" role="button" tabindex="0" aria-label="查看电源和持久化模块" aria-pressed="false"><rect x="520" y="363" width="195" height="84" rx="10"/><text x="618" y="394">Power / Telemetry</text><text x="618" y="421" class="map-sub">Pi 电源 · Flash · 诊断</text></g>
+<g data-module="driver" role="button" tabindex="0" aria-label="查看驱动与机械反馈" aria-pressed="false"><rect x="805" y="229" width="180" height="89" rx="10"/><text x="895" y="260">A 板 / STSPIN948</text><text x="895" y="288" class="map-sub">四电机 + 编码器</text></g>
+<path d="M800 110H895V228" fill="none" stroke="#af493b" stroke-width="3" stroke-dasharray="7 5"/>
+<rect x="780" y="67" width="205" height="65" rx="9" fill="#fff2ec" stroke="#b75b49"/><text x="882" y="94" text-anchor="middle" fill="#8c352a">急停 / MOTOR_INHIBIT</text><text x="882" y="116" text-anchor="middle" class="wire-caption">硬件关闭 + 软件故障锁存</text>
+<text x="20" y="400" class="diagram-label">原则</text><text x="20" y="427" class="wire-caption">有指令 ≠ 已获授权</text><text x="20" y="451" class="wire-caption">有效反馈 ≠ 自动恢复运动</text>
+</svg>
+</div>
+<div class="module-caption" aria-live="polite"><strong id="module-title">Control / 四轮速度闭环</strong><p id="module-detail">读取四路编码器，将车体速度逆解为四轮目标，统一限速并限制目标斜率，再计算 PI + 前馈。实际输出还要经过健康与硬件联锁复核。</p><a id="module-source" href="../MecanumB_Control/App/src/vehicle_control.c">查看 vehicle_control.c</a></div>
+
+## 流程动画：播放、单步与故障分支 {#flow-demo}
+
+选择流程和场景，再播放或单步观察。每个节点给出状态、输出和代码依据。**这是本地教学演示，不连接设备；动画时长不是任务执行时间，也不是实测时序。** 故障分支保留“拒绝解锁、停止输出或超时保电”的真实设计行为。
+
+<div class="flow-player" id="flow-player">
+<div class="demo-controls"><label>流程<select id="flow-kind"><option value="boot">启动与参数装载</option><option value="control">1 kHz 轮速控制</option><option value="safety">解锁与失效保护</option><option value="power">Pi 有序关机</option></select></label><label>场景<select id="flow-scenario"></select></label><label>播放速度<select id="flow-speed"><option value="1400">慢速</option><option value="850" selected>正常</option><option value="350">快速</option></select></label></div>
+<div class="demo-actions"><button id="flow-play" type="button" aria-pressed="false">播放</button><button id="flow-prev" type="button">上一步</button><button id="flow-next" type="button">下一步</button><button id="flow-reset" type="button">重置</button><span id="flow-progress" class="demo-count"></span></div>
+<ol id="flow-nodes" class="flow-nodes" aria-label="流程步骤"></ol>
+<div class="flow-explanation" aria-live="polite"><span id="flow-phase" class="demo-eyebrow"></span><h3 id="flow-title"></h3><p id="flow-detail"></p><a id="flow-source"></a></div>
+<dl class="signal-panel" aria-label="当前步骤的演示状态"><div><dt>演示阶段 / 软件状态</dt><dd id="signal-state"></dd></div><div><dt>运动 PWM / MOE</dt><dd id="signal-motor"></dd></div><div><dt>Pi 供电</dt><dd id="signal-pi"></dd></div><div><dt>HALTED</dt><dd id="signal-halted"></dd></div></dl>
+<p class="demo-note">输出为该步骤的示意值；不构成遥测、故障注入或 HIL。点击任一步骤可直接查看；播放到结尾自动停止。</p>
+</div>
+<noscript><p>启用 JavaScript 可使用流程播放器。静态结构图、公式与下文完整启动/控制/关机说明仍可离线阅读。</p></noscript>
+
+## 算法图解与麦轮交互演示 {#algorithm-demo}
+
+### ① 车体速度 → 四轮目标：和 vc_inverse() 对照
+
+拖动速度滑杆，观察轮组方向、速度和限幅。轮序为 FL、FR、RL、RR；图中前方朝上，横向正方向朝右，wz 正方向采用固件内部逆时针约定。展示的是 `vehicle_control.c` 的内部输入，不是未经转换的 ROS 消息。示例几何与轮速上限只是演示参数，不能替代车辆标定。
+
+<div class="kinematics-demo">
+<div class="kin-inputs"><div class="preset-buttons" role="group" aria-label="车体运动预设"><button type="button" data-preset="forward">前进</button><button type="button" data-preset="lateral">横移</button><button type="button" data-preset="rotate">原地旋转</button><button type="button" data-preset="mixed">组合 / 限幅</button><button type="button" data-preset="stop">停止</button></div>
+<label for="kin-vx">vx 前进速度 <output id="kin-vx-value"></output><input id="kin-vx" type="range" min="-1.5" max="1.5" step="0.05" value="0.4"></label>
+<label for="kin-vy">vy 横向速度 <output id="kin-vy-value"></output><input id="kin-vy" type="range" min="-1.5" max="1.5" step="0.05" value="0"></label>
+<label for="kin-wz">wz 偏航角速度 <output id="kin-wz-value"></output><input id="kin-wz" type="range" min="-3" max="3" step="0.1" value="0"></label>
+<label for="kin-radius">轮半径 r <output id="kin-radius-value"></output><input id="kin-radius" type="range" min="0.03" max="0.1" step="0.005" value="0.05"></label>
+<p class="demo-note">演示半轴距 L=0.15 m、半轮距 W=0.12 m、ωmax=20 rad/s。仅展示逆解与统一限幅，斜率限制和 PI 在后面的闭环图说明。</p><button type="button" id="wheel-motion" aria-pressed="false">播放轮组示意</button>
+</div>
+<div class="vehicle-panel"><svg viewBox="0 0 420 380" role="img" aria-labelledby="vehicle-title vehicle-desc"><title id="vehicle-title">麦轮四轮目标速度图</title><desc id="vehicle-desc">俯视图，左前与右前位于上方，左后与右后位于下方。带符号轮速见下方表格；条纹运动仅表示正反转。</desc><defs><marker id="vel-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a34a28"/></marker></defs>
+<rect x="110" y="65" width="200" height="245" rx="26" fill="#edf4ef" stroke="#779984" stroke-width="2"/><path d="M210 111V55M180 85L210 55L240 85" fill="none" stroke="#557761" stroke-width="2"/><text x="210" y="37" text-anchor="middle">车头 / +vx</text><text x="210" y="204" text-anchor="middle" class="diagram-label">车体速度 → 轮速</text><path id="body-vector" d="M210 245L210 215" stroke="#a34a28" stroke-width="4" marker-end="url(#vel-arrow)"/><text x="320" y="205" class="wire-caption">+vy →</text>
+<g id="wheel-FL"><rect x="72" y="88" width="40" height="72" rx="8"/><path class="roller-motion" d="M92 94V155"/><text x="53" y="83">FL</text><text id="wheel-value-FL" x="28" y="179"></text></g>
+<g id="wheel-FR"><rect x="308" y="88" width="40" height="72" rx="8"/><path class="roller-motion" d="M328 94V155"/><text x="353" y="83">FR</text><text id="wheel-value-FR" x="315" y="179"></text></g>
+<g id="wheel-RL"><rect x="72" y="235" width="40" height="72" rx="8"/><path class="roller-motion" d="M92 241V302"/><text x="53" y="332">RL</text><text id="wheel-value-RL" x="28" y="354"></text></g>
+<g id="wheel-RR"><rect x="308" y="235" width="40" height="72" rx="8"/><path class="roller-motion" d="M328 241V302"/><text x="353" y="332">RR</text><text id="wheel-value-RR" x="315" y="354"></text></g>
+<path id="yaw-vector" d="M170 275A48 48 0 1 1 250 275" fill="none" stroke="#a34a28" stroke-width="2" marker-end="url(#vel-arrow)"/></svg><p class="demo-note">条纹正反转是方向示意，未模拟滚子接地、滑移或实际车速。</p></div>
+</div>
+<div class="equation-box"><p><strong>k = L + W，原始轮速：</strong></p><pre>ωFL = (vx − vy − k·wz) / r     ωFR = (vx + vy + k·wz) / r
+ωRL = (vx + vy − k·wz) / r     ωRR = (vx − vy + k·wz) / r
+s = min(1, ωmax / max(|ωi|))     所有轮同时乘 s</pre><p id="kin-scale" aria-live="polite"></p><p id="kin-forward"></p></div>
+<div class="table-scroll"><table id="wheel-results"><caption>四轮逆解与统一限幅结果</caption><thead><tr><th>轮位</th><th>原始 rad/s</th><th>限幅后 rad/s</th><th>方向</th></tr></thead><tbody></tbody></table></div>
+
+### ② 编码器 → 斜率限制 → PI → 输出：闭环结构
+
+<div class="diagram-scroll"><svg class="loop-map" viewBox="0 0 1000 310" role="img" aria-labelledby="loop-title loop-desc"><title id="loop-title">轮速 PI 与反馈闭环</title><desc id="loop-desc">车体速度经过逆解、统一限幅、目标斜率限制，与编码器反馈比较后经 PI 和前馈，经过换向保护与硬件联锁驱动电机，反馈再次进入轮速误差。</desc><defs><marker id="loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52806b"/></marker></defs><g fill="none" stroke="#52806b" stroke-width="2" marker-end="url(#loop-arrow)"><path d="M161 95H190"/><path d="M342 95H370"/><path d="M520 95H550"/><path d="M702 95H730"/><path d="M883 95H980V237H615"/><path d="M460 237H445V140"/></g>
+<g class="loop-nodes"><rect x="10" y="52" width="151" height="88" rx="8"/><rect x="190" y="52" width="152" height="88" rx="8"/><rect x="370" y="52" width="150" height="88" rx="8"/><rect x="550" y="52" width="152" height="88" rx="8"/><rect x="730" y="52" width="153" height="88" rx="8"/><rect x="460" y="200" width="155" height="74" rx="8"/></g>
+<g text-anchor="middle"><text x="85" y="85">车体速度 / 逆解</text><text x="85" y="113" class="map-sub">统一限幅</text><text x="266" y="85">目标斜率限制</text><text x="266" y="113" class="map-sub">Δω ≤ αmax·dt</text><text x="445" y="85">目标 − 实测</text><text x="445" y="113" class="map-sub">速度误差 e</text><text x="626" y="85">PI + 前馈</text><text x="626" y="113" class="map-sub">限幅 / 抗饱和</text><text x="807" y="85">驱动输出</text><text x="807" y="113" class="map-sub">换向保护 + 联锁</text><text x="538" y="228">编码器 / 滤波</text><text x="538" y="254" class="map-sub">回绕差分 → rad/s</text></g><text x="796" y="224" class="wire-caption">电机 + 机械响应</text><text x="35" y="216" class="wire-caption">许可失效：目标、积分与占空比清零</text><text x="35" y="243" class="wire-caption">不是电流环；未包含电机实测模型</text></svg></div>
+<ol class="algorithm-notes"><li><strong>回绕与滤波：</strong>Δcount 按 16/32 位模数求差，ωraw=Δcount·2π/(CPR·dt)，α=dt/(τ+dt)，ωfiltered←ωfiltered+α(ωraw−ωfiltered)。</li><li><strong>同步斜率：</strong>先求四轮最大目标差，使用同一个 ratio=min(1, αmax·dt/max|ωdesired−ωtarget|) 缩放各轮更新量，避免各轮单独裁剪破坏速度比例。</li><li><strong>换向保护：</strong>目标方向改变而实测速度仍高于换向阈值时先输出零；允许改向时也有一个清积分/零输出周期。</li><li><strong>PI 与前馈：</strong>按目标方向控制幅值；积分是否接受取决于输出是否饱和及误差是否帮助退出饱和。最终再检查实际联锁。</li></ol>
+<div class="pi-demo"><h4>单轮 PI 的一次计算</h4><p class="demo-note">固定 dt=1 ms、Kp=0.1、Ki=0.2、FF=0.02、duty_limit=0.5、旧积分=0；演示方向已建立的稳态分支，不跳过实际固件中的换向保护。</p><label for="pi-target">目标轮速 rad/s <input id="pi-target" type="range" min="-20" max="20" step="0.5" value="8"><output id="pi-target-value"></output></label><label for="pi-measured">实测轮速（示例）rad/s <input id="pi-measured" type="range" min="-20" max="20" step="0.5" value="5"><output id="pi-measured-value"></output></label><div id="pi-result" class="pi-result" aria-live="polite"></div></div>

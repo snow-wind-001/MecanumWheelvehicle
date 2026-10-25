@@ -6,7 +6,7 @@
 
 ## 文档入口
 
-- [FreeRTOS 程序报告](docs/FreeRTOS程序报告_v1.html)：离线可读、可打印，含任务、启动、控制、协议、电源、保护、完整引脚表和验证边界。
+- [FreeRTOS 程序报告](docs/FreeRTOS程序报告_v1.html)：离线可读、可打印；包含可点击系统结构图、可播放/单步/切换故障分支的流程演示、麦轮逆解和 PI 交互计算，以及完整引脚表和验证边界。
 - [代码与电路一致性复核](docs/代码与电路一致性复核_v1.md)：本轮修复和电路依据。
 - [参数持久化与健康保护](docs/参数持久化与健康保护_v1.md)：Flash、阈值、SBUS、READY 和统计。
 - [B 板引脚定义](docs/B板引脚定义_v1.md)：端口、物理脚及预留未接接口。
@@ -60,7 +60,7 @@ source install/setup.bash
 ros2 run mecanum_mavlink bridge --ros-args --params-file src/mecanum_mavlink/config/vehicle.yaml
 ```
 
-报告可由最终 JSON 与复核文档重新生成，需要 Python `Markdown` 包：
+报告可由最终 JSON、复核文档及 `tools/report_assets/` 中的 HTML/CSS/JavaScript 资源重新生成，需要 Python `Markdown` 包。生成器把交互资源全部内嵌到最终 HTML，复制单个报告也可离线运行；演示不连接设备、不代表实测数据：
 
 ```bash
 python3 Code/tools/render_freertos_report.py

@@ -589,3 +589,13 @@
 | --- | --- |
 | [tools/README.md](tools/README.md) | 使用说明、设计复核、文件索引或贡献约定（以文件标题为准） |
 | [tools/step_to_obj.py](tools/step_to_obj.py) | Convert a STEP assembly into an OBJ mesh that Blender can import. |
+
+## 程序报告交互资源
+
+以下是当前报告的源资源，生成时内嵌到单个 HTML；不需要在线脚本或图形服务。
+
+| 文件 | 用途 |
+| --- | --- |
+| [interactive.html](Code/tools/report_assets/interactive.html) | 系统结构 SVG、流程播放器、麦轮示意与 PI 控件的结构和图文说明 |
+| [interactive.css](Code/tools/report_assets/interactive.css) | 图表、步骤高亮、轮组方向动画、窄屏/打印及减少动态效果样式 |
+| [interactive.js](Code/tools/report_assets/interactive.js) | 四类流程与故障分支、播放/单步状态、模块选择、麦轮逆解/正解和单步 PI 演示 |
