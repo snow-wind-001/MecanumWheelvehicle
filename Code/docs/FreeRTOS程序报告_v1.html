@@ -1,0 +1,1095 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><link rel="icon" href="data:,"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="MecanumB FreeRTOS 最终软件与硬件一致性报告"><title>MecanumB · FreeRTOS 程序报告</title><style>
+:root{--bg:#eef1ef;--paper:#fff;--ink:#172a22;--muted:#52665b;--line:#ccd8d0;--green:#163f30;--amber:#946017}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.85 system-ui,"Noto Sans SC","Microsoft YaHei",sans-serif}a{color:#17694d;text-underline-offset:3px}header{background:var(--green);color:white;padding:44px max(24px,calc((100vw - 1400px)/2));}header p{max-width:920px;color:#d6e7de}h1{font-size:clamp(30px,4vw,46px);line-height:1.3;margin:12px 0}header .tag{font-size:13px;letter-spacing:.12em}header .metrics{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.metrics div{padding:10px 22px;border:1px solid #587c69;border-radius:5px}.metrics strong{font-size:26px;display:block}.metrics span{font-size:13px;color:#d6e7de}.toolbar{display:flex;gap:18px;align-items:center;margin-top:20px}.toolbar a{color:#fff}.toolbar button{border:1px solid #adc9ba;background:transparent;color:white;padding:7px 15px;border-radius:4px;cursor:pointer}.layout{display:grid;grid-template-columns:250px minmax(0,1fr);max-width:1450px;margin:auto;gap:32px;padding:28px 24px}nav{position:sticky;top:16px;align-self:start;max-height:94vh;overflow:auto;padding:12px 0;font-size:14px}nav ul{list-style:none;padding:0}nav li{margin:0 0 9px}nav a{text-decoration:none}article{background:var(--paper);padding:24px 38px;min-width:0;border:1px solid var(--line)}h2{font-size:26px;line-height:1.5;border-bottom:2px solid var(--line);padding-bottom:12px;margin:50px 0 20px;scroll-margin-top:20px}h2:first-child{margin-top:0}h3{font-size:21px;margin-top:34px}p{margin:12px 0}table{border-collapse:collapse;display:block;width:100%;overflow-x:auto;margin:20px 0;font-size:14px;line-height:1.65}th,td{padding:10px 12px;border:1px solid var(--line);vertical-align:top;min-width:95px}th{background:#eaf1ed;text-align:left}tbody tr:nth-child(even){background:#f8faf9}code{font: .88em/1.65 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;background:#edf2ef;padding:2px 4px;border-radius:3px}pre{white-space:pre-wrap;overflow:auto;background:#152d22;color:#e4f0e9;padding:18px;line-height:1.7}pre code{background:transparent;color:inherit;padding:0}blockquote{border-left:4px solid var(--amber);margin:20px 0;padding:8px 18px;background:#fff6e7}li{margin:6px 0}.pin-search{padding:14px;background:#edf3ef}.pin-search input{font:inherit;padding:7px 10px;max-width:100%;border:1px solid #9ab3a3;border-radius:4px}footer{max-width:1400px;margin:15px auto 40px;color:var(--muted);padding:0 24px;font-size:13px}[hidden]{display:none!important}@media(max-width:950px){.layout{display:block;padding:15px}nav{position:static;max-height:260px;margin-bottom:20px;border-bottom:1px solid var(--line)}article{padding:20px}h2{font-size:23px}header{padding:30px 22px}}@media print{body,article{background:white}header{background:white;color:black;padding:0 0 15px}header p,.metrics span{color:#333}.toolbar,nav,.pin-search{display:none}.layout{display:block;padding:0}article{border:0;padding:0}h2{break-after:avoid}tr,pre{break-inside:avoid}table{display:table;font-size:10px}th,td{padding:5px}a{color:black}footer{padding:0}.metrics div{border-color:#777}header .metrics{gap:10px}pre{background:#f0f0f0;color:black}}
+</style></head>
+<body><header><div class="tag">STM32F429ZGT6 / FREERTOS 10.3.1 / MAVLINK V2</div><h1>FreeRTOS 程序与电路一致性报告</h1><p>从真实代码、最终 EDA 归档与本轮软件验证出发，说明启动、调度、控制、保护和 Pi 电源握手。软件检查通过；实板与整车验收待完成。</p><div class="metrics"><div><strong>80 / 80</strong><span>主机测试 · 零跳过</span></div><div><strong>64 + 68</strong><span>必需 MCU 引脚 + 板间接口位置</span></div><div><strong>7</strong><span>静态任务 · 1 kHz 控制目标</span></div><div><strong>0</strong><span>STM32 构建告警</span></div></div><div class="toolbar"><a href="../../README.md">项目 README</a><a href="代码与电路一致性复核_v1.md">复核原文</a><button type="button" onclick="window.print()">打印 / 导出 PDF</button></div></header><div class="layout"><nav aria-label="报告目录"><strong>报告目录</strong><div class="toc">
+<ul>
+<li><a href="#overview">阅读结论与证据等级</a></li>
+<li><a href="#boot">固件启动：先建立禁止输出，再建立任务</a></li>
+<li><a href="#tasks">七个任务与中断边界</a></li>
+<li><a href="#control">1 kHz 控制路径与运动安全</a></li>
+<li><a href="#protocol">控制链路、参数和坐标</a></li>
+<li><a href="#sensors">传感器链路与真实性</a></li>
+<li><a href="#power">Pi 电源流程与部署闭环</a></li>
+<li><a href="#telemetry">遥测、诊断与统计单位</a></li>
+<li><a href="#review">本轮缺陷修复、硬件依据与验证</a></li>
+<li><a href="#pins">完整 MCU 信号对照</a></li>
+<li><a href="#files">代码文件地图与修改入口</a></li>
+<li><a href="#reproduce">复现命令与验收记录</a></li>
+</ul>
+</div>
+</nav><article><h2 id="overview">阅读结论与证据等级</h2>
+<p>当前交付具备软件台架联调条件：<strong>80 项测试通过、零跳过，STM32 全量构建零告警，ESP32 / ROS 构建成功，必需引脚与板间接口匹配</strong>。这份报告同时记录已修复的问题与未验证项。</p>
+<p>未完成真实烧录、ADC/PWM 标定、HIL、机械干涉复核与运行统计实测。NTC 保护和本机 SBUS 运动权默认关闭。<strong>不得把“软件测试通过”解释为整车或工业认证已经完成。</strong></p>
+<table>
+<thead>
+<tr>
+<th>证据</th>
+<th>能说明什么</th>
+<th>不能说明什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C/Python/ROS/PTY 80 项测试</td>
+<td>在主机上验证真实协议/状态/存储/保护核心及串口交互</td>
+<td>不验证真实 HAL 外设、模拟噪声或电机负载</td>
+</tr>
+<tr>
+<td>STM32 / ESP32 / ROS 构建</td>
+<td>当前源码可编译、链接与打包</td>
+<td>不证明固件已烧入板卡</td>
+</tr>
+<tr>
+<td>原生归档解析与 GPIO 对照</td>
+<td>64 个必需引脚、60 位信号与 8 位电源接口契约一致</td>
+<td>不证明实体线束针序、极性和焊接良好</td>
+</tr>
+<tr>
+<td>SRAM 函数反汇编检查</td>
+<td>擦除轮询不依赖 Flash 函数调用，且程序未侵入参数区</td>
+<td>不证明擦除过程的 WDI 波形与实际最长时间</td>
+</tr>
+<tr>
+<td>既有 PCB3_1 最终几何审计</td>
+<td>保存后铜形间距与信号/GND 连通性复核通过</td>
+<td>不能替代未跑通的嘉立创EDA原生 DRC 或生产文件审查</td>
+</tr>
+</tbody>
+</table>
+<h2 id="boot">固件启动：先建立禁止输出，再建立任务</h2>
+<ol>
+<li>复位向量经启动汇编复制 <code>.data</code>（包含 <code>.RamFunc</code>）到 SRAM、清零 <code>.bss</code>，进入 HAL 与时钟初始化。</li>
+<li>HSE=8 MHz，PLL M/N/P=8/360/2，SYSCLK=180 MHz，APB1=45 MHz，APB2=90 MHz。外设初始化由 <code>Src/main.c</code> 与 MSP 完成。</li>
+<li>GPIO、DMA、TIM、ADC、SPI 与 UART 初始化。电机许可及主输出保持关闭；外部急停/禁止线不能由软件绕过。</li>
+<li><code>vehicle_app_init()</code> 启用 DWT、生成 boot_id、初始化授权状态并扫描 Flash A/B 日志。有有效参数才设置 configured；加载不会自动解锁。</li>
+<li>必须擦除时只在启动阶段执行 SRAM 擦除/看门狗服务，绝不在运行任务中擦除扇区；之后创建七个静态任务。</li>
+<li>再启动内部 IWDG，进入调度器。SafetyTask 只有在所监测任务持续推进时才维持正常看门狗服务。</li>
+</ol>
+<p>启动阶段和正常运行阶段的喂狗策略不同。RAM 维护函数仅用于<strong>电机被禁止的启动擦除</strong>，3 s 超时会停止喂狗；不能把它移入运动任务作为无限续命机制。</p>
+<h2 id="tasks">七个任务与中断边界</h2>
+<table>
+<thead>
+<tr>
+<th>任务</th>
+<th>优先级</th>
+<th>静态栈（32 位字）</th>
+<th>名义节拍 / 触发</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Safety</td>
+<td>15</td>
+<td>512</td>
+<td>2 ms</td>
+<td>联锁、急停/故障、授权期限和健康进度；看门狗</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>14</td>
+<td>1024</td>
+<td>TIM6，1 kHz</td>
+<td>编码器、PI、输出、健康保护、抖动统计</td>
+</tr>
+<tr>
+<td>HostRx</td>
+<td>11</td>
+<td>1536</td>
+<td>1 ms 轮询 / DMA 接收</td>
+<td>Pi/ESP32 双通道解帧、命令与参数</td>
+</tr>
+<tr>
+<td>Imu</td>
+<td>10</td>
+<td>768</td>
+<td>DRDY / 有限等待</td>
+<td>SPI 采样、时间戳、姿态输入</td>
+</tr>
+<tr>
+<td>SensorRx</td>
+<td>8</td>
+<td>1024</td>
+<td>周期处理循环 DMA</td>
+<td>UBX、LD06、SBUS 解析、ADC 交接</td>
+</tr>
+<tr>
+<td>Telemetry</td>
+<td>7</td>
+<td>1024</td>
+<td>1 ms 调度</td>
+<td>有限队列遥测、配置防抖持久化、CPU 采样</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>6</td>
+<td>512</td>
+<td>10 ms</td>
+<td>Pi 停轮、关机握手、HALTED 与切电状态机</td>
+</tr>
+</tbody>
+</table>
+<p>栈值为分配容量，不是测量出的余量。高水位遥测单位同为字，乘 4 才是字节。ISR 处理时间戳、DMA 进度、通知与紧急关闭；高紧急度中断不得直接调用不满足 FreeRTOS 优先级约束的 API。协议、健康和电源核心保持纯 C，应用层负责临界区串行化。</p>
+<h2 id="control">1 kHz 控制路径与运动安全</h2>
+<pre><code class="language-text">TIM6 → 通知 Control → 时间差/期限检查 → 读 TIM2/3/4/5 编码器
+     → 配置版本同步 → 检查运动许可 → 麦轮逆解/限速/斜率限制
+     → 编码器差分/轮速滤波 → PI + 前馈/饱和与换向限制
+     → 电气健康检查 → 再检查硬件联锁 → DIR / CCR / MOE / ARM
+</code></pre>
+<p>轮序固定 FL、FR、RL、RR。编码器 16 位计数器按有符号回绕差分处理，32 位计数器使用相应模数；CPR 必须是减速输出轴每圈经正交解码后的有效计数，不能直接填传感器单路脉冲数。</p>
+<p>几何参数包括轮半径、半轴距、半轮距；方向符号和轮安装顺序必须通过单轮测试确认。轮速环不是电流环，采样电流用于诊断与保护，不能据此宣称具备已标定的力矩控制。</p>
+<p>运动许可由已授权来源、租约、指令有效期、无故障、无电源禁止、无 Flash 维护组成；Pi 额外要求 READY。紧急关闭同时撤 ARM、关闭 TIM1 MOE 并清占空比。失联或故障后恢复数据不自动恢复运动。</p>
+<p>正常稳态周期超预算产生控制故障；启动 100 ms 和禁止运动的 Flash 维护窗口不计入正常抖动样本。窗口存在必须在实测报告中注明，不能用被排除的样本证明整车实时性。</p>
+<h2 id="protocol">控制链路、参数和坐标</h2>
+<table>
+<thead>
+<tr>
+<th>通道/入口</th>
+<th>配置</th>
+<th>主要消息/服务</th>
+<th>约束</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STM32 USART6 ↔ Pi</td>
+<td>921600 8N1；MCU sysid/compid 1/1</td>
+<td>HEARTBEAT、COMMAND_LONG、PARAM_*、SET_POSITION_TARGET_LOCAL_NED</td>
+<td>READY、显式 ARM、心跳和运动指令都必须有效</td>
+</tr>
+<tr>
+<td>STM32 USART1 ↔ ESP32</td>
+<td>921600 8N1</td>
+<td>MAVLink 遥测、RC/无线转发</td>
+<td>不能绕过 MCU 授权/故障期限</td>
+</tr>
+<tr>
+<td>ROS <code>/cmd_vel</code></td>
+<td>geometry_msgs/Twist</td>
+<td>车体运动请求</td>
+<td>超时必须停车；节点不自动重解锁</td>
+</tr>
+<tr>
+<td><code>~/arm</code></td>
+<td>SetBool</td>
+<td>ARM / DISARM</td>
+<td>configured、无故障且符合联锁</td>
+</tr>
+<tr>
+<td><code>~/shutdown_pi</code></td>
+<td>Trigger</td>
+<td>命令 246，param1=0，param2=2</td>
+<td>仅 Pi、先上锁，ACK 后等待真实内核停机</td>
+</tr>
+</tbody>
+</table>
+<p>MAVLink 车体消息使用 BODY_NED/FRD 约定，ROS 采用常见 x 前、y 左、z 上；节点承担横向/偏航符号转换。IMU 轴映射是编译期默认，必须按板卡实际朝向校准。姿态使用 IMU 滤波与轮速辅助，不是 EKF、多传感器全局定位或视觉/激光 SLAM。</p>
+<p>20 个配置参数：<code>RADIUS_M</code>、<code>HALF_LEN_M</code>、<code>HALF_WID_M</code>、<code>COUNTS_REV</code>、<code>ENC_SIGN0..3</code>、<code>MOT_SIGN0..3</code>、<code>MAX_WHEEL</code>、<code>MAX_ACCEL</code>、<code>KP</code>、<code>KI</code>、<code>FF</code>、<code>DUTY_LIMIT</code>、<code>SPEED_TAU</code>、<code>REVERSAL</code>。仅 DISARMED 接受参数修改；有效配置防抖后落盘。模板中的几何零值用于阻止未标定运动，不能直接改成看似合理的猜测值。</p>
+<h2 id="sensors">传感器链路与真实性</h2>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>实现</th>
+<th>新鲜度/故障处理</th>
+<th>尚待验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ICM-42688-P</td>
+<td>SPI2 + PD2 DRDY；短事务不抢占 SBUS DMA 流</td>
+<td>记录边沿和采样时间，有限等待</td>
+<td>型号响应、轴向、噪声、200 Hz 实际节拍</td>
+</tr>
+<tr>
+<td>GNSS</td>
+<td>USART2 DMA，UBX 解析，PG8 PPS</td>
+<td>校验与重同步，数据时间戳</td>
+<td>天线、固件协议、锁定与定位精度</td>
+</tr>
+<tr>
+<td>LD06</td>
+<td>USART3 RX DMA，CRC/帧同步</td>
+<td>局部供电、支路故障与超时状态</td>
+<td>线序、转速模式、实测角度/距离</td>
+</tr>
+<tr>
+<td>SBUS</td>
+<td>UART7 PF6，100000、偶校验、2 stop；硬件完成电平/反相</td>
+<td>SBUS 无 CRC；格式/failsafe/新物理帧时间</td>
+<td>接收机极性、CH5、断链输出</td>
+</tr>
+<tr>
+<td>ADC</td>
+<td>PC0–PC5/PB1，TIM8 TRGO + DMA</td>
+<td>ADC 有效性与 1 s 丢失故障</td>
+<td>参考电压、零点、PWM 有效采样窗口</td>
+</tr>
+</tbody>
+</table>
+<p>本机 SBUS 运动权默认关闭。启用分支已专门编译并测试：先低后高、一次消费上升沿、缓存帧不续租、failsafe 立即撤权。它没有替用户确认接收机的真实 failsafe 行为。</p>
+<h2 id="power">Pi 电源流程与部署闭环</h2>
+<pre><code class="language-text">显式关机请求 → 锁存 power_inhibit → 确认驱动关闭且停轮
+→ PC6 请求（A 板转换为 GPIO27 低）→ Linux 有序关机
+→ 内核 GPIO22 HALTED → MCU PD1 确认 → PD3 单次切电脉冲
+</code></pre>
+<p>PowerTask 用实际输出施加时间更新状态机，避免抢占缩短物理脉冲。停止、HALTED 或断电超时只报故障并保留供电，不强行切电，也不自动重复脉冲。重复已接受关机命令可以 ACK，但不重新启动状态机。</p>
+<p><code>Code/pi/mecanum-bridge.service</code> 当前启动 <strong>mecanum_mavlink</strong>。配置必须来自同名包，不能使用 legacy 包的参数 namespace。节点启动先将 GPIO17 READY 置低，只有心跳新鲜才拉高；成功关机 ACK 后保持低，退出时释放。两个 ROS 节点不可同时占用串口或 READY。</p>
+<p>GPIO22 必须归内核 <code>gpio-poweroff</code> 所有。发布的 <code>config-halted-pending.txt</code> 是等待真实接线/波形验证的模板，不能把模板存在当作已启用。ROS 停止回调或 Python 不得模拟 HALTED。</p>
+<h2 id="telemetry">遥测、诊断与统计单位</h2>
+<table>
+<thead>
+<tr>
+<th>字段组</th>
+<th>字段示例</th>
+<th>单位/无效值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>电气</td>
+<td>i_fl/i_fr/i_rl/i_rr、ntc_c、soc、vbat、vmot</td>
+<td>A、°C、0–1、V；无效模拟量为 NaN</td>
+</tr>
+<tr>
+<td>保护</td>
+<td>fault、stall</td>
+<td>故障位图与四轮堵转位图，不能当连续量画趋势</td>
+</tr>
+<tr>
+<td>参数</td>
+<td>cfg_rev、cfg_seq、cfg_err</td>
+<td>RAM 版本、成功存储序号与错误计数</td>
+</tr>
+<tr>
+<td>任务栈</td>
+<td>stk_safe/stk_ctrl/stk_host/stk_tele/stk_pow/stk_imu/stk_rx</td>
+<td>最低剩余栈字数；不是已用字节数</td>
+</tr>
+<tr>
+<td>实时性</td>
+<td>jit_us、jit_max、cpu_pct</td>
+<td>绝对周期误差 µs、最大值 µs、估算 CPU %</td>
+</tr>
+<tr>
+<td>通信</td>
+<td>pi_up、esp_up、esp_age、rc_age</td>
+<td>活跃标志与秒龄；无历史数据不可解释为“刚收到”</td>
+</tr>
+</tbody>
+</table>
+<p>ROS <code>/diagnostics</code> 汇总 serial link、electrical、runtime 等状态。CPU 是 DWT 与 Idle 计数估算，不是独立仪器测量；微秒计数接口约 71 分钟回绕，上游 FreeRTOS 统计在边界处有精度限制。故障位、配置序号以 MAVLink 浮点命名字段发送时，大整数还受浮点精度限制，不能依赖其进行无限精确的长期审计。</p>
+<h2 id="review">本轮缺陷修复、硬件依据与验证</h2>
+<p>2026-10-25。范围：当前 STM32 编译工程、MAVLink / ROS / Pi 部署、参数与健康保护，以及最终原生工程归档中的 PCB2 / PCB3_1。只发布最终文件，历史备份、过程日志及候选路由保留在本地。</p>
+<h3 id="_1">结论与依据</h3>
+<p>本轮修复了代码中的具体缺陷，当前 80 项主机测试通过，STM32 全量构建零告警，ESP32 与两个 ROS 包构建通过。归档中 64 个必需 MCU 引脚与引脚基线一致，主 GPIO 宏匹配；A/B 60 位信号接口、8 位电源接口匹配。该检查不等于所有外设已在实板正常工作，也不是工业验收证明。</p>
+<p>电路依据为 <code>PCB/backups/PCB3_1_routing_complete.epro2</code>，不是旧版导出或当前未保存窗口。机器报告保存归档 SHA256；后续如果更换归档，应重跑检查。</p>
+<ul>
+<li>PCB2 UUID：<code>9fb4ea4c3f4a2c99</code>，MCU U10 / STM32F429ZGT6，LQFP144。</li>
+<li>PCB3_1 UUID：<code>d5bab27b5a49d1b7</code>，电源与电机驱动板。</li>
+<li>程序入口：<code>Code/MecanumB_Control/Makefile</code>，默认 <code>VEHICLE_LINK_PROTOCOL_MAVLINK=1</code>。</li>
+<li>仅发布一份完整 EDA 归档和 <code>3D/Vehicle Layout v15.blend</code>；本轮未修改机械几何、PCB 元件布局或布线。</li>
+</ul>
+<h3 id="_2">已修复问题</h3>
+<table>
+<thead>
+<tr>
+<th>问题</th>
+<th>修复与验证</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>启动擦除 Flash 期间可能被外部看门狗复位</td>
+<td>不再擦除空白槽；必须擦除时在 <code>.RamFunc</code> 中关中断轮询，每 20 ms 为 PG12 提供 WDI 下降沿，电机 ARM/MOE 保持关闭。3 s 超时停止喂狗等待外部复位；完成后刷新 Flash 缓存。ELF 检查确认函数位于 SRAM 且没有子程序调用；实际擦除波形仍待实测</td>
+</tr>
+<tr>
+<td>参数保存与解锁竞争</td>
+<td>同一临界区检查 DISARMED、无待确认授权、配置有效并获取 <code>maintenance</code>。MAVLink / legacy 解锁和运动许可全部受维护联锁约束；编程进行中不能被截止时间提前解锁，完成后保持 20 ms 才释放</td>
+</tr>
+<tr>
+<td>电流阈值与驱动/电机不匹配</td>
+<td>根据用户提供的 MG370 单电机约 1 A 堵转电流，采用待标定 1.2 A / 20 ms 过流和 0.8 A / 低速 / 500 ms 堵转阈值，可用宏覆盖；新增约 1 A 输入的堵转测试</td>
+</tr>
+<tr>
+<td>清除计时在滞回带中累计</td>
+<td>过流、欠压、过温只在满足恢复条件时连续计时；条件中断即清零。添加“长时间滞回带 + 一次恢复采样不能清故障”测试</td>
+</tr>
+<tr>
+<td>损坏 Flash 头部使后续记录不可见或重写非空槽</td>
+<td>固定 84 字节槽逐项扫描，跳过非空损坏记录；只在完全擦除槽追加。测试模型严格执行 Flash 位只能 1→0，覆盖损坏中间头、损坏尾、CRC 回退与满槽轮换</td>
+</tr>
+<tr>
+<td>SBUS 高电平重新授权、缓存样本延长租约</td>
+<td>LOW→HIGH 只消费一次；未出现新 LOW 时不能在上锁后自动重解锁。租约以物理帧时间为准，相同时间戳不续租；failsafe 立即撤权。生产默认仍关闭本地运动权，专门以启用宏编译测试</td>
+</tr>
+<tr>
+<td>Pi 默认部署启动 legacy 节点</td>
+<td><code>mecanum-bridge.service</code> 改为启动 <code>mecanum_mavlink</code>；配置也须使用同名包的 YAML，避免协议不匹配</td>
+</tr>
+<tr>
+<td>关机 ACK 丢失后重试被拒绝</td>
+<td>对已接受的同一 Pi 关机请求幂等 ACK，不重复触发电源状态机；READY 只在接受 ACK 后因关机而拉低</td>
+</tr>
+<tr>
+<td>无效 ADC 仍可能上报旧 NTC 温度为有效</td>
+<td>NTC 有效性必须同时满足 ADC 有效；添加启用 NTC 编译分支测试</td>
+</tr>
+<tr>
+<td>CPU 负载计算无符号下溢与 DWT 频繁回绕</td>
+<td>空闲百分比先限幅再相减；DWT 先扩展再转为微秒用于 RTOS 统计。统计计数仍为 32 位，约 71 分钟回绕；跨回绕瞬间的任务统计存在上游内核精度边界，不能作为高精度测量</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">硬件映射与电气参数</h3>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>归档连接/名义值</th>
+<th>程序处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FL/FR/RL/RR PWM</td>
+<td>PE9/PE11/PE13/PE14，TIM1_CH1–4</td>
+<td>20 kHz PWM，硬件 Break 与许可共同约束</td>
+</tr>
+<tr>
+<td>编码器</td>
+<td>FL PA15/PB3；FR PA6/PA7；RL PB6/PB7；RR PA0/PA1</td>
+<td>TIM2/3/4/5，16/32 位回绕差分；方向与 CPR 待标定</td>
+</tr>
+<tr>
+<td>驱动故障/急停</td>
+<td>PG4–PG7、PG11；PE15 MOTOR_INHIBIT</td>
+<td>故障锁存、撤销授权、关闭 ARM/MOE</td>
+</tr>
+<tr>
+<td>电流 ADC</td>
+<td>PC0–PC3 = IN10–13；板间 39/41/43/45</td>
+<td>50 mΩ × 10 V/V = 名义 0.5 V/A，ADC 按轮序采集</td>
+</tr>
+<tr>
+<td>电压 ADC</td>
+<td>PC4/PC5 = IN14/15；板间 47/48</td>
+<td>120 kΩ / 10 kΩ，即分压比 13</td>
+</tr>
+<tr>
+<td>外接 NTC</td>
+<td>PB1 = IN9；板间 49</td>
+<td>电路为 10 kΩ 上拉、100 Ω 串联及 100 nF；探头型号/Beta 未确认，默认关闭</td>
+</tr>
+<tr>
+<td>Pi</td>
+<td>USART6 PG14/PG9，921600 8N1</td>
+<td>MAVLink 双通道之一；READY PD0、HALTED PD1、关机请求 PC6、切电 PD3</td>
+</tr>
+<tr>
+<td>ESP32</td>
+<td>USART1 PA9/PA10，921600 8N1</td>
+<td>桥的 RX16/TX17 对应 MCU TX/RX，注意按信号方向接线</td>
+</tr>
+<tr>
+<td>外部看门狗</td>
+<td>A U11 TPS3431，EN/SET1 高，CWD 经 10 kΩ 上拉</td>
+<td>名义 200 ms；PG12 WDI 经板间 31，WDO 经板间 55 接 MCU 25 NRST</td>
+</tr>
+<tr>
+<td>预留未接</td>
+<td>PD8 LD06_TX、PC10/PC11 POSE、PE0/PE1 LOG</td>
+<td>归档没有对应 MCU 铜网络；软件初始化不代表具有可用硬件接口</td>
+</tr>
+</tbody>
+</table>
+<p>STSPIN948 的 MODE1/2/3 为 0/1/0，采用双独立全桥固定关断时间限流。REF 网络名义 1.5 V、增益 10、50 mΩ，推导硬件电流阈值约 3 A；旧 6 A 过流、3 A 堵转设置不能作为这台 1 A 堵转电机的合理保护基线。推导基于电路和器件关系，未包含误差与真实 PWM 波形校准。<a href="https://www.st.com/resource/en/datasheet/stspin948.pdf">STSPIN948 数据手册</a></p>
+<p>TPS3431 在当前 CWD/SET1 配置下名义 200 ms，范围 170–230 ms。推迟内部 IWDG 初始化不能规避一直启用的外部看门狗，因此必须处理 Flash 忙时 CPU 无法从同组 Flash 取指的问题。<a href="https://www.ti.com/lit/ds/symlink/tps3431.pdf">TPS3431 数据手册</a>、<a href="https://www.st.com/resource/en/reference_manual/dm00031020-stm32f4xxx-advanced-armbased-32bit-mcus-stmicroelectronics.pdf">STM32F4 参考手册 RM0090</a></p>
+<h3 id="_4">参数存储与启动</h3>
+<p>程序 Flash 为 768 KiB；扇区 10/11 分别从 <code>0x080C0000</code> / <code>0x080E0000</code> 开始，各 128 KiB。每条记录 84 字节：魔数、版本、配置长度、序号、CRC32、boot_id 与 64 字节配置；每扇区容纳 1560 条记录。</p>
+<p>启动扫描最新有效记录，CRC 与参数范围都通过后 <code>configured=1</code>；无有效记录则 <code>configured=0</code>，拒绝解锁。运行期仅 DISARMED 且配置稳定 750 ms 才追加，永不运行期擦扇区；写满下次启动轮换。保存后回读验证，失败通过 <code>cfg_err</code> 诊断；连续编辑时只清除对应版本的 dirty。</p>
+<p>上电和加载有效参数都不会自动解锁。Pi 源仍必须满足真实 READY、电源和 HALTED 联锁；其他来源也必须显式授权并具有新鲜指令与租约。整片擦除会清掉持久化参数，烧录策略必须保留参数区。</p>
+<h3 id="_5">健康保护的真实边界</h3>
+<ul>
+<li>过流：&gt;1.2 A 持续 20 ms；全部轮 ≤0.6 A 连续 1 s 恢复。阈值来自电机规格输入，未完成电流零点/量程校准。</li>
+<li>堵转：有运动许可、占空比绝对值 &gt;0.1、采样电流 &gt;0.8 A、轮速 &lt;1 rad/s 持续 500 ms；条件消失 2 s 恢复。</li>
+<li>欠压：按假定 4S 单体 &lt;3.3 V 持续 1 s 触发，&gt;3.5 V 连续 2 s 恢复；电池类型与分压实测须确认。</li>
+<li>NTC：过温分支支持 75 °C / 1 s 与 60 °C / 2 s 恢复，但默认 <code>VH_NTC_ENABLED=0</code>，现版不能宣称已启用温度保护。</li>
+<li>ADC 无效持续 1 s 产生传感器故障；有效性恢复不自动恢复运动授权。</li>
+<li>SOC 只按 4S 电压线性估算，不是 BMS，不测单体、库仑量或均衡。</li>
+<li>TIM8 ADC 与 TIM1 PWM 同为 20 kHz，但并未硬件锁定采样相位；DMA 当前交接末次扫描，不是每 PWM 周期平均电流。驱动低侧采样在某些占空比/续流状态可能低估实际电流，必须台架验证有效采样窗口，不能仅凭换算公式证明可靠保护。</li>
+</ul>
+<h3 id="freertospi">FreeRTOS、Pi 与验收</h3>
+<p>7 个静态任务：Safety 15、Control 14、HostRx 11、Imu 10、SensorRx 8、Telemetry 7、Power 6。Control 由 TIM6 通知，目标 1 kHz；维护期间硬件输出关闭且不计入常态抖动样本。CPU、最大/最近抖动、7 个任务栈高水位有遥测通路，尚无实测数值。</p>
+<p>MAVLink 关机只允许 Pi 通道、<code>param1=0/param2=2</code>、未运动且 READY 有效；接受后 inhibit，再等待停轮与真正内核 HALTED，最后单次切电。ROS 不伪造 HALTED。Pi 的 <code>config-halted-pending.txt</code> 未作为已验证配置启用；不合并它时，不能指望 Linux 自动提供 HALTED，系统应超时保电并报故障。</p>
+<h3 id="_6">软件验证结果</h3>
+<table>
+<thead>
+<tr>
+<th>检查</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STM32 全量 GCC 构建</td>
+<td>成功，0 warning；FLASH 78,844 B / 768 KiB，RAM 54,712 B / 192 KiB，CCM 0</td>
+</tr>
+<tr>
+<td>主机 C / Python / ROS / PTY</td>
+<td>80 项通过，0 跳过；包含本地 SBUS 和 NTC 启用分支</td>
+</tr>
+<tr>
+<td>ROS colcon</td>
+<td>mecanum_mavlink、mecanum_bridge 两包构建成功；部署主线仅启动前者</td>
+</tr>
+<tr>
+<td>ESP32 PlatformIO</td>
+<td>成功；Flash 747,369 B，RAM 46,568 B</td>
+</tr>
+<tr>
+<td>时钟配置</td>
+<td>HSE 8 MHz，PLL 8/360/2，SYSCLK 180 MHz；APB1 45/APB2 90 MHz</td>
+</tr>
+<tr>
+<td>原生归档接口</td>
+<td>64 个必需 MCU 信号匹配、5 个预留未接明确记录；60 位信号/8 位电源接口匹配</td>
+</tr>
+<tr>
+<td>ELF SRAM 擦除函数</td>
+<td>地址 0x20000098，228 字节，无调用指令；BIN 未侵入参数区</td>
+</tr>
+</tbody>
+</table>
+<p>可复现命令见根 README。最终精简证据为 <code>Code/reports/verification_final_v1.json</code>、<code>hardware_contract_v1.json</code>、<code>firmware_image_contract_v1.json</code>。完整过程日志只在开发机保留。</p>
+<p>未完成的硬件验收：SWD 烧录和复位原因记录、Flash 首写/轮换/断电恢复、WDI/READY/HALTED 波形、ADC/PWM 相位与换算、NTC 型号、编码器方向、单轮限流台架、堵转/欠压故障注入、HIL、持续运行统计和温升。当前证据支持继续台架联调，不能写成“实板全部无误”或“达到工业认证”。</p>
+<h2 id="pins">完整 MCU 信号对照</h2>
+<p>下表由最终 EDA 原生归档自动生成。<code>pass</code> 表示归档 MCU 网络与引脚契约一致；对具有主 GPIO 宏的项目还检查端口。它不穷尽外设寄存器配置、封装焊接或实物线束测试。</p>
+<div class="pin-search"><label for="pin-query">筛选引脚 / 网络：</label><input id="pin-query" type="search" placeholder="例如 PG12、NTC、PI_READY" autocomplete="off"></div>
+<div id="pin-table">
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>MCU 端口</th>
+<th>LQFP144 脚号</th>
+<th>归档铜网络</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PWM_FL</td>
+<td>PE9</td>
+<td>60</td>
+<td>PWM_FL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PWM_FR</td>
+<td>PE11</td>
+<td>64</td>
+<td>PWM_FR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PWM_RL</td>
+<td>PE13</td>
+<td>66</td>
+<td>PWM_RL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PWM_RR</td>
+<td>PE14</td>
+<td>67</td>
+<td>PWM_RR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>MOTOR_INHIBIT</td>
+<td>PE15</td>
+<td>68</td>
+<td>MOTOR_INHIBIT</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>DIR_FL</td>
+<td>PG0</td>
+<td>56</td>
+<td>DIR_FL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>DIR_FR</td>
+<td>PG1</td>
+<td>57</td>
+<td>DIR_FR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>DIR_RL</td>
+<td>PG2</td>
+<td>87</td>
+<td>DIR_RL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>DIR_RR</td>
+<td>PG3</td>
+<td>88</td>
+<td>DIR_RR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_FL_A</td>
+<td>PA15</td>
+<td>110</td>
+<td>ENC_FL_A</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_FL_B</td>
+<td>PB3</td>
+<td>133</td>
+<td>ENC_FL_B</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_FR_A</td>
+<td>PA6</td>
+<td>42</td>
+<td>ENC_FR_A</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_FR_B</td>
+<td>PA7</td>
+<td>43</td>
+<td>ENC_FR_B</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_RL_A</td>
+<td>PB6</td>
+<td>136</td>
+<td>ENC_RL_A</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_RL_B</td>
+<td>PB7</td>
+<td>137</td>
+<td>ENC_RL_B</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_RR_A</td>
+<td>PA0</td>
+<td>34</td>
+<td>ENC_RR_A</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ENC_RR_B</td>
+<td>PA1</td>
+<td>35</td>
+<td>ENC_RR_B</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ESP32_TX</td>
+<td>PA9</td>
+<td>101</td>
+<td>ESP_MCU_TX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ESP32_RX</td>
+<td>PA10</td>
+<td>102</td>
+<td>ESP_MCU_RX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>GNSS_TX</td>
+<td>PD5</td>
+<td>119</td>
+<td>GNSS_TX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>GNSS_RX</td>
+<td>PD6</td>
+<td>122</td>
+<td>GNSS_RX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LD06_TX</td>
+<td>PD8</td>
+<td>77</td>
+<td>未接</td>
+<td>optional_unwired</td>
+</tr>
+<tr>
+<td>LD06_RX</td>
+<td>PD9</td>
+<td>78</td>
+<td>LD06_RX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>POSE_TX</td>
+<td>PC10</td>
+<td>111</td>
+<td>未接</td>
+<td>optional_unwired</td>
+</tr>
+<tr>
+<td>POSE_RX</td>
+<td>PC11</td>
+<td>112</td>
+<td>未接</td>
+<td>optional_unwired</td>
+</tr>
+<tr>
+<td>PI_TX</td>
+<td>PG14</td>
+<td>129</td>
+<td>PI_TX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_RX</td>
+<td>PG9</td>
+<td>124</td>
+<td>PI_RX</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>SBUS_IN</td>
+<td>PF6</td>
+<td>18</td>
+<td>SBUS_IN</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LOG_RX</td>
+<td>PE0</td>
+<td>141</td>
+<td>未接</td>
+<td>optional_unwired</td>
+</tr>
+<tr>
+<td>LOG_TX</td>
+<td>PE1</td>
+<td>142</td>
+<td>未接</td>
+<td>optional_unwired</td>
+</tr>
+<tr>
+<td>IMU_CS</td>
+<td>PB12</td>
+<td>73</td>
+<td>IMU_CS</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>IMU_SCK</td>
+<td>PB13</td>
+<td>74</td>
+<td>IMU_SCK</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>IMU_MISO</td>
+<td>PB14</td>
+<td>75</td>
+<td>IMU_MISO</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>IMU_MOSI</td>
+<td>PB15</td>
+<td>76</td>
+<td>IMU_MOSI</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>IMU_DRDY</td>
+<td>PD2</td>
+<td>116</td>
+<td>IMU_DRDY</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I2C1_SCL</td>
+<td>PB8</td>
+<td>139</td>
+<td>I2C1_SCL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I2C1_SDA</td>
+<td>PB9</td>
+<td>140</td>
+<td>I2C1_SDA</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I_FL</td>
+<td>PC0</td>
+<td>26</td>
+<td>I_FL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I_FR</td>
+<td>PC1</td>
+<td>27</td>
+<td>I_FR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I_RL</td>
+<td>PC2</td>
+<td>28</td>
+<td>I_RL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>I_RR</td>
+<td>PC3</td>
+<td>29</td>
+<td>I_RR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>VBAT_DIV</td>
+<td>PC4</td>
+<td>44</td>
+<td>VBAT_DIV</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>VM_DIV</td>
+<td>PC5</td>
+<td>45</td>
+<td>VM_DIV</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>NTC</td>
+<td>PB1</td>
+<td>47</td>
+<td>NTC</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>GNSS_PPS</td>
+<td>PG8</td>
+<td>93</td>
+<td>GNSS_PPS</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LD06_PWM</td>
+<td>PE5</td>
+<td>4</td>
+<td>LD06_PWM</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>MOTOR_ARM_REQ</td>
+<td>PG10</td>
+<td>125</td>
+<td>MOTOR_ARM_REQ</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>MCU_WDI</td>
+<td>PG12</td>
+<td>127</td>
+<td>MCU_WDI</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>ESTOP_OK</td>
+<td>PG11</td>
+<td>126</td>
+<td>ESTOP_OK</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>DRV_WAKE</td>
+<td>PD14</td>
+<td>85</td>
+<td>DRV_WAKE</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_PWR_CMD</td>
+<td>PD3</td>
+<td>117</td>
+<td>PI_PWR_CMD</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>AUX_PWR_EN</td>
+<td>PD4</td>
+<td>118</td>
+<td>AUX_PWR_EN</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_PWR_GOOD</td>
+<td>PC7</td>
+<td>97</td>
+<td>PI_PWR_GOOD</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>AUX_PWR_GOOD</td>
+<td>PC8</td>
+<td>98</td>
+<td>AUX_PWR_GOOD</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>CHG_PRESENT</td>
+<td>PD7</td>
+<td>123</td>
+<td>CHG_PRESENT</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PWR_ALERT_N</td>
+<td>PD10</td>
+<td>79</td>
+<td>PWR_ALERT_N</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_READY</td>
+<td>PD0</td>
+<td>114</td>
+<td>PI_READY</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_HALTED</td>
+<td>PD1</td>
+<td>115</td>
+<td>PI_HALTED</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>PI_SHUTDOWN_REQ</td>
+<td>PC6</td>
+<td>96</td>
+<td>PI_SHUTDOWN_REQ</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LVL_SHIFT_OE</td>
+<td>PD12</td>
+<td>81</td>
+<td>LVL_SHIFT_OE</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>SWDIO</td>
+<td>PA13</td>
+<td>105</td>
+<td>SWDIO</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>SWCLK</td>
+<td>PA14</td>
+<td>109</td>
+<td>SWCLK</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LD06_PWR_EN</td>
+<td>PD13</td>
+<td>82</td>
+<td>LD06_PWR_EN</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>LD06_FAULT_N</td>
+<td>PD11</td>
+<td>80</td>
+<td>LD06_FAULT_N</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>FAULT_FL</td>
+<td>PG4</td>
+<td>89</td>
+<td>FAULT_FL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>FAULT_FR</td>
+<td>PG5</td>
+<td>90</td>
+<td>FAULT_FR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>FAULT_RL</td>
+<td>PG6</td>
+<td>91</td>
+<td>FAULT_RL</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>FAULT_RR</td>
+<td>PG7</td>
+<td>92</td>
+<td>FAULT_RR</td>
+<td>pass</td>
+</tr>
+<tr>
+<td>NRST_B</td>
+<td>NRST</td>
+<td>25</td>
+<td>NRST_B</td>
+<td>pass</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="files">代码文件地图与修改入口</h2>
+<table>
+<thead>
+<tr>
+<th>当前文件/目录</th>
+<th>作用</th>
+<th>修改注意</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Src/main.c / MSP / it.c</td>
+<td>外设初始化、时钟、DMA 与 IRQ</td>
+<td>结合 IOC、物理引脚、DMA 流和 IRQ 优先级审核</td>
+</tr>
+<tr>
+<td>App/src/vehicle_app.c</td>
+<td>RTOS/HAL 编排、输出、Flash 适配、统计</td>
+<td>维护与 ARM 必须同临界区串行化；SRAM 擦除不能新增 Flash 调用</td>
+</tr>
+<tr>
+<td>vehicle_control.c</td>
+<td>麦轮运动学、编码器、滤波、PI</td>
+<td>轮序、符号、CPR 与坐标约定须保持一致</td>
+</tr>
+<tr>
+<td>vehicle_link.c</td>
+<td>显式授权、来源、期限、维护/电源/故障联锁</td>
+<td>新协议入口必须复用同一许可判断</td>
+</tr>
+<tr>
+<td>vehicle_mavlink.c</td>
+<td>MAVLink 解析、参数、遥测、SBUS、关机命令</td>
+<td>确认来源通道、目标 ID、数值范围及回复幂等性</td>
+</tr>
+<tr>
+<td>vehicle_sensor_app.c / vehicle_sensors.c</td>
+<td>HAL 采集与纯 C 帧解析</td>
+<td>不能把缓存转发时间冒充物理采样时间</td>
+</tr>
+<tr>
+<td>vehicle_fusion.c</td>
+<td>姿态及轮速辅助估计</td>
+<td>校准 IMU 朝向；不要误写为全局融合定位</td>
+</tr>
+<tr>
+<td>vehicle_power.c</td>
+<td>Pi 停轮→HALTED→切电</td>
+<td>真实输出施加时间、超时保电和单次脉冲</td>
+</tr>
+<tr>
+<td>vehicle_health.c</td>
+<td>ADC 换算和持续计时保护</td>
+<td>阈值、有效性和恢复条件同时校验</td>
+</tr>
+<tr>
+<td>vehicle_store.c</td>
+<td>固定长度参数日志</td>
+<td>只追加空白位置；CRC、损坏恢复与掉电语义</td>
+</tr>
+<tr>
+<td>vehicle_protocol.c / vehicle_tx.c</td>
+<td>legacy 兼容编码和发送队列</td>
+<td>当前测试依赖这些实现；不是旧快照备份</td>
+</tr>
+<tr>
+<td>App/include/</td>
+<td>上述模块公共接口、状态和配置宏</td>
+<td>修改结构后重跑完整主机测试与固件构建</td>
+</tr>
+<tr>
+<td>Drivers / Middlewares / Startup</td>
+<td>HAL、CMSIS、FreeRTOS、MAVLink 与启动汇编</td>
+<td>保留原许可证，不用实验工程覆盖当前源码</td>
+</tr>
+<tr>
+<td>ROS mecanum_mavlink</td>
+<td>主用节点、GPIO17、服务、遥测/诊断</td>
+<td>验证 PTY、命令 ACK、GPIO 释放与过期行为</td>
+</tr>
+<tr>
+<td>ROS mecanum_bridge</td>
+<td>测试保留的 legacy 兼容实现</td>
+<td>不与主用节点同时部署</td>
+</tr>
+<tr>
+<td>ESP32_Radio_Bridge</td>
+<td>当前无线/串口桥</td>
+<td>UART 接线、SBUS 极性、网络参数均须现场确认</td>
+</tr>
+<tr>
+<td>tests/</td>
+<td>C 测试夹具与 unittest</td>
+<td>当前共 80 项；完整运行要求 ROS + pymavlink</td>
+</tr>
+<tr>
+<td>tools/check_hardware_contract.py</td>
+<td>原生归档引脚和板间接口复核</td>
+<td>更换归档时重跑</td>
+</tr>
+<tr>
+<td>tools/check_firmware_image.py</td>
+<td>ELF SRAM 函数与程序 Flash 边界检查</td>
+<td>每次改擦除函数/链接配置后重跑</td>
+</tr>
+<tr>
+<td>tools/render_freertos_report.py</td>
+<td>用最终 JSON 和本轮复核文档生成本报告</td>
+<td>需要 Python Markdown；不接触硬件</td>
+</tr>
+</tbody>
+</table>
+<p>未写前缀的 C 文件位于 <code>Code/MecanumB_Control/App/src/</code>。更多文件见<a href="../../README.md">根 README</a>与<a href="../../FILES.md">完整发布文件索引</a>。旧实验工程、生成中间文件、历史日志不在 GitHub 发布范围。</p>
+<h2 id="reproduce">复现命令与验收记录</h2>
+<pre><code class="language-bash">make -C Code/MecanumB_Control -B -j4
+python3 Code/tools/check_clock_config.py
+python3 Code/tools/check_hardware_contract.py
+python3 Code/tools/check_firmware_image.py
+source /opt/ros/humble/setup.bash
+~/.venvs/mecanum-ros2/bin/python -m unittest discover -s Code/tests -v
+~/.venvs/mecanum-esp32/bin/pio run -d Code/ESP32_Radio_Bridge
+cd Code/ros2_ws
+colcon build --symlink-install --packages-select mecanum_mavlink mecanum_bridge
+</code></pre>
+<p>不同机器应换成实际可导入 ROS 的 Python 环境；缺依赖导致跳过不能算完整测试。构建输出不上传 GitHub，最终机器结果位于 <code>Code/reports/verification_final_v1.json</code>。部署前保留参数扇区；烧录整片擦除将清空参数。</p>
+<p>下一阶段验收记录应逐项填写固件版本、板卡版本、仪器/接线、操作、预期、实测与结论：首次限流上电 → 单轮编码器与换向 → 电流/电压标定 → ADC/PWM 相位 → 急停/断链 → 看门狗/Flash 轮换与掉电 → Pi 有序关机 → 抖动/栈/CPU 长时统计 → 温升与 HIL。当前没有实测结果的单元应保留“未测”，不能填零。</p></article></div><footer>版本：2026-10-25 最终发布 · 验证时间：2026-10-25T02:34:15.540296+00:00 · 无外部字体或脚本依赖，可离线阅读。本文无实板实测数据。</footer><script>document.getElementById('pin-query').addEventListener('input',function(){const q=this.value.toLowerCase().trim();document.querySelectorAll('#pin-table tbody tr').forEach(r=>{r.hidden=!r.textContent.toLowerCase().includes(q);});});</script></body></html>

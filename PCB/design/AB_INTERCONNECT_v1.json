@@ -1,0 +1,871 @@
+{
+  "channels": {
+    "1": {
+      "signal": "PWM_FL",
+      "gpio": "PE9",
+      "a_net": "PWM_FL_RAW",
+      "b_net": "PWM_FL",
+      "mcu_pin": "60"
+    },
+    "2": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "3": {
+      "signal": "DIR_FL",
+      "gpio": "PG0",
+      "a_net": "PH_FL_RAW",
+      "b_net": "DIR_FL",
+      "mcu_pin": "56"
+    },
+    "4": {
+      "signal": "FAULT_FL",
+      "gpio": "PG4",
+      "a_net": "EN_FL",
+      "b_net": "FAULT_FL",
+      "mcu_pin": "89"
+    },
+    "5": {
+      "signal": "PWM_FR",
+      "gpio": "PE11",
+      "a_net": "PWM_FR_RAW",
+      "b_net": "PWM_FR",
+      "mcu_pin": "64"
+    },
+    "6": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "7": {
+      "signal": "DIR_FR",
+      "gpio": "PG1",
+      "a_net": "PH_FR_RAW",
+      "b_net": "DIR_FR",
+      "mcu_pin": "57"
+    },
+    "8": {
+      "signal": "FAULT_FR",
+      "gpio": "PG5",
+      "a_net": "EN_FR",
+      "b_net": "FAULT_FR",
+      "mcu_pin": "90"
+    },
+    "9": {
+      "signal": "PWM_RL",
+      "gpio": "PE13",
+      "a_net": "PWM_RL_RAW",
+      "b_net": "PWM_RL",
+      "mcu_pin": "66"
+    },
+    "10": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "11": {
+      "signal": "DIR_RL",
+      "gpio": "PG2",
+      "a_net": "PH_RL_RAW",
+      "b_net": "DIR_RL",
+      "mcu_pin": "87"
+    },
+    "12": {
+      "signal": "FAULT_RL",
+      "gpio": "PG6",
+      "a_net": "EN_RL",
+      "b_net": "FAULT_RL",
+      "mcu_pin": "91"
+    },
+    "13": {
+      "signal": "PWM_RR",
+      "gpio": "PE14",
+      "a_net": "PWM_RR_RAW",
+      "b_net": "PWM_RR",
+      "mcu_pin": "67"
+    },
+    "14": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "15": {
+      "signal": "DIR_RR",
+      "gpio": "PG3",
+      "a_net": "PH_RR_RAW",
+      "b_net": "DIR_RR",
+      "mcu_pin": "88"
+    },
+    "16": {
+      "signal": "FAULT_RR",
+      "gpio": "PG7",
+      "a_net": "EN_RR",
+      "b_net": "FAULT_RR",
+      "mcu_pin": "92"
+    },
+    "17": {
+      "signal": "ENC_FL_A",
+      "gpio": "PA15",
+      "a_net": "ENC_FL_A",
+      "b_net": "ENC_FL_A",
+      "mcu_pin": "110"
+    },
+    "18": {
+      "signal": "ENC_FL_B",
+      "gpio": "PB3",
+      "a_net": "ENC_FL_B",
+      "b_net": "ENC_FL_B",
+      "mcu_pin": "133"
+    },
+    "19": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "20": {
+      "signal": "ENC_FR_A",
+      "gpio": "PA6",
+      "a_net": "ENC_FR_A",
+      "b_net": "ENC_FR_A",
+      "mcu_pin": "42"
+    },
+    "21": {
+      "signal": "ENC_FR_B",
+      "gpio": "PA7",
+      "a_net": "ENC_FR_B",
+      "b_net": "ENC_FR_B",
+      "mcu_pin": "43"
+    },
+    "22": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "23": {
+      "signal": "ENC_RL_A",
+      "gpio": "PB6",
+      "a_net": "ENC_RL_A",
+      "b_net": "ENC_RL_A",
+      "mcu_pin": "136"
+    },
+    "24": {
+      "signal": "ENC_RL_B",
+      "gpio": "PB7",
+      "a_net": "ENC_RL_B",
+      "b_net": "ENC_RL_B",
+      "mcu_pin": "137"
+    },
+    "25": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "26": {
+      "signal": "ENC_RR_A",
+      "gpio": "PA0",
+      "a_net": "ENC_RR_A",
+      "b_net": "ENC_RR_A",
+      "mcu_pin": "34"
+    },
+    "27": {
+      "signal": "ENC_RR_B",
+      "gpio": "PA1",
+      "a_net": "ENC_RR_B",
+      "b_net": "ENC_RR_B",
+      "mcu_pin": "35"
+    },
+    "28": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "29": {
+      "signal": "MOTOR_ARM_REQ",
+      "gpio": "PG10",
+      "a_net": "MOTOR_ARM_CABLE",
+      "b_net": "MOTOR_ARM_REQ",
+      "mcu_pin": "125"
+    },
+    "30": {
+      "signal": "ESTOP_OK",
+      "gpio": "PG11",
+      "a_net": "ESTOP_OK",
+      "b_net": "ESTOP_OK",
+      "mcu_pin": "126"
+    },
+    "31": {
+      "signal": "MCU_WDI",
+      "gpio": "PG12",
+      "a_net": "WDI_B",
+      "b_net": "MCU_WDI",
+      "mcu_pin": "127"
+    },
+    "32": {
+      "signal": "DRV_WAKE",
+      "gpio": "PD14",
+      "a_net": "DRV_WAKE_CABLE",
+      "b_net": "DRV_WAKE",
+      "mcu_pin": "85"
+    },
+    "33": {
+      "signal": "PI_PWR_CMD",
+      "gpio": "PD3",
+      "a_net": "PI_PWR_CMD",
+      "b_net": "PI_PWR_CMD",
+      "mcu_pin": "117"
+    },
+    "34": {
+      "signal": "PI_PWR_GOOD",
+      "gpio": "PC7",
+      "a_net": "PI_PWR_GOOD",
+      "b_net": "PI_PWR_GOOD",
+      "mcu_pin": "97"
+    },
+    "35": {
+      "signal": "AUX_PWR_EN",
+      "gpio": "PD4",
+      "a_net": "AUX_PWR_EN",
+      "b_net": "AUX_PWR_EN",
+      "mcu_pin": "118"
+    },
+    "36": {
+      "signal": "AUX_PWR_GOOD",
+      "gpio": "PC8",
+      "a_net": "AUX_PWR_GOOD",
+      "b_net": "AUX_PWR_GOOD",
+      "mcu_pin": "98"
+    },
+    "37": {
+      "signal": "I2C1_SCL",
+      "gpio": "PB8",
+      "a_net": "I2C1_SCL",
+      "b_net": "I2C1_SCL",
+      "mcu_pin": "139"
+    },
+    "38": {
+      "signal": "I2C1_SDA",
+      "gpio": "PB9",
+      "a_net": "I2C1_SDA",
+      "b_net": "I2C1_SDA",
+      "mcu_pin": "140"
+    },
+    "39": {
+      "signal": "I_FL",
+      "gpio": "PC0",
+      "a_net": "I_MOT_FL_ADC",
+      "b_net": "I_FL",
+      "mcu_pin": "26"
+    },
+    "40": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "41": {
+      "signal": "I_FR",
+      "gpio": "PC1",
+      "a_net": "I_MOT_FR_ADC",
+      "b_net": "I_FR",
+      "mcu_pin": "27"
+    },
+    "42": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "43": {
+      "signal": "I_RL",
+      "gpio": "PC2",
+      "a_net": "I_MOT_RL_ADC",
+      "b_net": "I_RL",
+      "mcu_pin": "28"
+    },
+    "44": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "45": {
+      "signal": "I_RR",
+      "gpio": "PC3",
+      "a_net": "I_MOT_RR_ADC",
+      "b_net": "I_RR",
+      "mcu_pin": "29"
+    },
+    "46": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "47": {
+      "signal": "VBAT_DIV",
+      "gpio": "PC4",
+      "a_net": "VBAT_DIV",
+      "b_net": "VBAT_DIV",
+      "mcu_pin": "44"
+    },
+    "48": {
+      "signal": "VM_DIV",
+      "gpio": "PC5",
+      "a_net": "VM_DIV",
+      "b_net": "VM_DIV",
+      "mcu_pin": "45"
+    },
+    "49": {
+      "signal": "NTC",
+      "gpio": "PB1",
+      "a_net": "NTC",
+      "b_net": "NTC",
+      "mcu_pin": "47"
+    },
+    "50": {
+      "signal": "MOTOR_INHIBIT",
+      "gpio": "PE15",
+      "a_net": "MOTOR_INHIBIT",
+      "b_net": "MOTOR_INHIBIT",
+      "mcu_pin": "68"
+    },
+    "51": {
+      "signal": "CHG_PRESENT",
+      "gpio": "PD7",
+      "a_net": "CHG_PRESENT",
+      "b_net": "CHG_PRESENT",
+      "mcu_pin": "123"
+    },
+    "52": {
+      "signal": "PWR_ALERT_N",
+      "gpio": "PD10",
+      "a_net": "PWR_ALERT_N",
+      "b_net": "PWR_ALERT_N",
+      "mcu_pin": "79"
+    },
+    "53": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "54": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "55": {
+      "signal": "WATCHDOG_RST_N",
+      "gpio": "NRST",
+      "a_net": "WATCHDOG_RST_N",
+      "b_net": "NRST_B",
+      "mcu_pin": "25"
+    },
+    "56": {
+      "signal": "SPARE2",
+      "gpio": null,
+      "a_net": null,
+      "b_net": null
+    },
+    "57": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "58": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    },
+    "59": {
+      "signal": "SPARE3",
+      "gpio": null,
+      "a_net": null,
+      "b_net": null
+    },
+    "60": {
+      "signal": "GND",
+      "gpio": null,
+      "a_net": "GND",
+      "b_net": "GND"
+    }
+  },
+  "boards": {
+    "A_Power_Driver": {
+      "pageUuid": "d4df6b056b0274c6",
+      "devices": [
+        {
+          "ref": "J8",
+          "name": "62736020621",
+          "libraryName": "62736020621",
+          "uuid": "3118e7b91e044a668afef42be0808a90",
+          "supplier": "C26796442",
+          "x": 240,
+          "y": 750,
+          "fitted": true
+        },
+        {
+          "ref": "J9",
+          "name": "430450800",
+          "libraryName": "430450800_C122422",
+          "uuid": "6d8de219fd2948a4914ba8a5c2aad1eb",
+          "supplier": "C122422",
+          "x": 950,
+          "y": 750,
+          "fitted": true
+        },
+        {
+          "ref": "R86",
+          "name": "0603WAF1003T5E",
+          "libraryName": "0603WAF1003T5E",
+          "uuid": "40ff282b3d594c33b798d1707d8406cb",
+          "supplier": "C25803",
+          "x": 950,
+          "y": 450,
+          "fitted": true
+        },
+        {
+          "ref": "R87",
+          "name": "0603WAF1002T5E",
+          "libraryName": "0603WAF1002T5E",
+          "uuid": "b948db94476e4027ac8953235755ec96",
+          "supplier": "C25804",
+          "x": 1250,
+          "y": 450,
+          "fitted": true
+        },
+        {
+          "ref": "R88",
+          "name": "0603WAF1001T5E",
+          "uuid": "18db11499a04403ba8c98e2f7a687fbc",
+          "supplier": "C21190",
+          "x": 950,
+          "y": 250,
+          "fitted": true
+        },
+        {
+          "ref": "R89",
+          "name": "0603WAF1001T5E",
+          "uuid": "18db11499a04403ba8c98e2f7a687fbc",
+          "supplier": "C21190",
+          "x": 1250,
+          "y": 250,
+          "fitted": true
+        },
+        {
+          "ref": "U19",
+          "name": "SN74LVC2G17DBVR",
+          "libraryName": "SN74LVC2G17DBVR",
+          "uuid": "31f4cb333cd344a7afb439e95e378663",
+          "supplier": "C10429",
+          "x": 950,
+          "y": 1050,
+          "fitted": true
+        },
+        {
+          "ref": "C89",
+          "name": "CL10B104KB8NNNC",
+          "uuid": "ac7072e4a0764739a31216c96ed3c9cc",
+          "supplier": "C1591",
+          "x": 1250,
+          "y": 1050,
+          "fitted": true
+        }
+      ],
+      "pins": {
+        "J8": {
+          "1": "PWM_FL_RAW",
+          "2": "GND",
+          "3": "PH_FL_RAW",
+          "4": "EN_FL",
+          "5": "PWM_FR_RAW",
+          "6": "GND",
+          "7": "PH_FR_RAW",
+          "8": "EN_FR",
+          "9": "PWM_RL_RAW",
+          "10": "GND",
+          "11": "PH_RL_RAW",
+          "12": "EN_RL",
+          "13": "PWM_RR_RAW",
+          "14": "GND",
+          "15": "PH_RR_RAW",
+          "16": "EN_RR",
+          "17": "ENC_FL_A",
+          "18": "ENC_FL_B",
+          "19": "GND",
+          "20": "ENC_FR_A",
+          "21": "ENC_FR_B",
+          "22": "GND",
+          "23": "ENC_RL_A",
+          "24": "ENC_RL_B",
+          "25": "GND",
+          "26": "ENC_RR_A",
+          "27": "ENC_RR_B",
+          "28": "GND",
+          "29": "MOTOR_ARM_CABLE",
+          "30": "ESTOP_OK",
+          "31": "WDI_B",
+          "32": "DRV_WAKE_CABLE",
+          "33": "PI_PWR_CMD",
+          "34": "PI_PWR_GOOD",
+          "35": "AUX_PWR_EN",
+          "36": "AUX_PWR_GOOD",
+          "37": "I2C1_SCL",
+          "38": "I2C1_SDA",
+          "39": "I_MOT_FL_ADC",
+          "40": "GND",
+          "41": "I_MOT_FR_ADC",
+          "42": "GND",
+          "43": "I_MOT_RL_ADC",
+          "44": "GND",
+          "45": "I_MOT_RR_ADC",
+          "46": "GND",
+          "47": "VBAT_DIV",
+          "48": "VM_DIV",
+          "49": "NTC",
+          "50": "MOTOR_INHIBIT",
+          "51": "CHG_PRESENT",
+          "52": "PWR_ALERT_N",
+          "53": "GND",
+          "54": "GND",
+          "55": "WATCHDOG_RST_N",
+          "57": "GND",
+          "58": "GND",
+          "60": "GND"
+        },
+        "J9": {
+          "1": "+5V_PI",
+          "2": "+5V_PI",
+          "3": "GND",
+          "4": "GND",
+          "5": "+5V_AUX",
+          "6": "GND",
+          "7": "3V3_CTRL",
+          "8": "GND"
+        },
+        "R86": {
+          "1": "AUX_PWR_EN",
+          "2": "GND"
+        },
+        "R87": {
+          "1": "3V3_CTRL",
+          "2": "AUX_PWR_GOOD"
+        },
+        "R88": {
+          "1": "MOTOR_ARM_CABLE",
+          "2": "MOTOR_ARM_FILTERED"
+        },
+        "R89": {
+          "1": "DRV_WAKE_CABLE",
+          "2": "DRV_WAKE_FILTERED"
+        },
+        "U19": {
+          "1": "MOTOR_ARM_FILTERED",
+          "2": "GND",
+          "3": "DRV_WAKE_FILTERED",
+          "4": "DRV_WAKE_REQ",
+          "5": "3V3_CTRL",
+          "6": "MOTOR_ARM_REQ"
+        },
+        "C89": {
+          "1": "3V3_CTRL",
+          "2": "GND"
+        }
+      },
+      "no_connect": {
+        "J8": [
+          "56",
+          "59"
+        ]
+      },
+      "external_pins": {
+        "U3.9": "AUX_PWR_EN",
+        "U3.8": "AUX_PWR_GOOD",
+        "L1.2": "+5V_PI",
+        "L2.2": "+5V_AUX",
+        "L3.2": "3V3_CTRL",
+        "U11.6": "WDI_B",
+        "U7.3": "WATCHDOG_RST_N",
+        "U11.7": "WATCHDOG_RST_N",
+        "R71.1": "WATCHDOG_RST_N",
+        "R71.2": "3V3_CTRL",
+        "R50.1": "PWM_FL_RAW",
+        "R51.1": "PH_FL_RAW",
+        "R46.2": "I_MOT_FL_ADC",
+        "C64.1": "I_MOT_FL_ADC",
+        "C64.2": "GND",
+        "R46.1": "I_MOT_FL",
+        "U5.11": "I_MOT_FL",
+        "R52.1": "PWM_FR_RAW",
+        "R53.1": "PH_FR_RAW",
+        "R47.2": "I_MOT_FR_ADC",
+        "C65.1": "I_MOT_FR_ADC",
+        "C65.2": "GND",
+        "R47.1": "I_MOT_FR",
+        "U5.26": "I_MOT_FR",
+        "R54.1": "PWM_RL_RAW",
+        "R55.1": "PH_RL_RAW",
+        "R48.2": "I_MOT_RL_ADC",
+        "C66.1": "I_MOT_RL_ADC",
+        "C66.2": "GND",
+        "R48.1": "I_MOT_RL",
+        "U6.11": "I_MOT_RL",
+        "R56.1": "PWM_RR_RAW",
+        "R57.1": "PH_RR_RAW",
+        "R49.2": "I_MOT_RR_ADC",
+        "C67.1": "I_MOT_RR_ADC",
+        "C67.2": "GND",
+        "R49.1": "I_MOT_RR",
+        "U6.26": "I_MOT_RR",
+        "U8.1": "MOTOR_ARM_REQ",
+        "R73.1": "MOTOR_ARM_FILTERED",
+        "R73.2": "GND",
+        "C73.1": "MOTOR_ARM_FILTERED",
+        "C73.2": "GND",
+        "U10.1": "DRV_WAKE_REQ",
+        "R74.1": "DRV_WAKE_FILTERED",
+        "R74.2": "GND",
+        "C74.1": "DRV_WAKE_FILTERED",
+        "C74.2": "GND"
+      }
+    },
+    "B_Control": {
+      "pageUuid": "06fdc5a0689e0827",
+      "devices": [
+        {
+          "ref": "J15",
+          "name": "62736020621",
+          "libraryName": "62736020621",
+          "uuid": "3118e7b91e044a668afef42be0808a90",
+          "supplier": "C26796442",
+          "x": 240,
+          "y": 750,
+          "fitted": true
+        },
+        {
+          "ref": "J16",
+          "name": "430450800",
+          "libraryName": "430450800_C122422",
+          "uuid": "6d8de219fd2948a4914ba8a5c2aad1eb",
+          "supplier": "C122422",
+          "x": 950,
+          "y": 750,
+          "fitted": true
+        },
+        {
+          "ref": "R67",
+          "name": "0603WAF4701T5E",
+          "libraryName": "0603WAF4701T5E",
+          "uuid": "0f0661658cdd4f45888ea39caf7e9650",
+          "supplier": "C23162",
+          "x": 950,
+          "y": 450,
+          "fitted": true
+        },
+        {
+          "ref": "R68",
+          "name": "0603WAF4701T5E",
+          "libraryName": "0603WAF4701T5E",
+          "uuid": "0f0661658cdd4f45888ea39caf7e9650",
+          "supplier": "C23162",
+          "x": 1250,
+          "y": 450,
+          "fitted": true
+        },
+        {
+          "ref": "R69",
+          "name": "0603WAF1002T5E",
+          "libraryName": "0603WAF1002T5E",
+          "uuid": "b948db94476e4027ac8953235755ec96",
+          "supplier": "C25804",
+          "x": 950,
+          "y": 250,
+          "fitted": true
+        },
+        {
+          "ref": "R70",
+          "name": "0603WAF1002T5E",
+          "libraryName": "0603WAF1002T5E",
+          "uuid": "b948db94476e4027ac8953235755ec96",
+          "supplier": "C25804",
+          "x": 1250,
+          "y": 250,
+          "fitted": true
+        }
+      ],
+      "pins": {
+        "J15": {
+          "1": "PWM_FL",
+          "2": "GND",
+          "3": "DIR_FL",
+          "4": "FAULT_FL",
+          "5": "PWM_FR",
+          "6": "GND",
+          "7": "DIR_FR",
+          "8": "FAULT_FR",
+          "9": "PWM_RL",
+          "10": "GND",
+          "11": "DIR_RL",
+          "12": "FAULT_RL",
+          "13": "PWM_RR",
+          "14": "GND",
+          "15": "DIR_RR",
+          "16": "FAULT_RR",
+          "17": "ENC_FL_A",
+          "18": "ENC_FL_B",
+          "19": "GND",
+          "20": "ENC_FR_A",
+          "21": "ENC_FR_B",
+          "22": "GND",
+          "23": "ENC_RL_A",
+          "24": "ENC_RL_B",
+          "25": "GND",
+          "26": "ENC_RR_A",
+          "27": "ENC_RR_B",
+          "28": "GND",
+          "29": "MOTOR_ARM_REQ",
+          "30": "ESTOP_OK",
+          "31": "MCU_WDI",
+          "32": "DRV_WAKE",
+          "33": "PI_PWR_CMD",
+          "34": "PI_PWR_GOOD",
+          "35": "AUX_PWR_EN",
+          "36": "AUX_PWR_GOOD",
+          "37": "I2C1_SCL",
+          "38": "I2C1_SDA",
+          "39": "I_FL",
+          "40": "GND",
+          "41": "I_FR",
+          "42": "GND",
+          "43": "I_RL",
+          "44": "GND",
+          "45": "I_RR",
+          "46": "GND",
+          "47": "VBAT_DIV",
+          "48": "VM_DIV",
+          "49": "NTC",
+          "50": "MOTOR_INHIBIT",
+          "51": "CHG_PRESENT",
+          "52": "PWR_ALERT_N",
+          "53": "GND",
+          "54": "GND",
+          "55": "NRST_B",
+          "57": "GND",
+          "58": "GND",
+          "60": "GND"
+        },
+        "J16": {
+          "1": "+5V_PI",
+          "2": "+5V_PI",
+          "3": "GND",
+          "4": "GND",
+          "5": "+5V_AUX",
+          "6": "GND",
+          "7": "3V3_CTRL",
+          "8": "GND"
+        },
+        "R67": {
+          "1": "3V3_CTRL",
+          "2": "I2C1_SCL"
+        },
+        "R68": {
+          "1": "3V3_CTRL",
+          "2": "I2C1_SDA"
+        },
+        "R69": {
+          "1": "3V3_CTRL",
+          "2": "MOTOR_INHIBIT"
+        },
+        "R70": {
+          "1": "ESTOP_OK",
+          "2": "GND"
+        }
+      },
+      "no_connect": {
+        "J15": [
+          "56",
+          "59"
+        ]
+      },
+      "external_pins": {
+        "U10.60": "PWM_FL",
+        "U10.56": "DIR_FL",
+        "U10.89": "FAULT_FL",
+        "U10.64": "PWM_FR",
+        "U10.57": "DIR_FR",
+        "U10.90": "FAULT_FR",
+        "U10.66": "PWM_RL",
+        "U10.87": "DIR_RL",
+        "U10.91": "FAULT_RL",
+        "U10.67": "PWM_RR",
+        "U10.88": "DIR_RR",
+        "U10.92": "FAULT_RR",
+        "U10.110": "ENC_FL_A",
+        "U10.133": "ENC_FL_B",
+        "U10.42": "ENC_FR_A",
+        "U10.43": "ENC_FR_B",
+        "U10.136": "ENC_RL_A",
+        "U10.137": "ENC_RL_B",
+        "U10.34": "ENC_RR_A",
+        "U10.35": "ENC_RR_B",
+        "U10.125": "MOTOR_ARM_REQ",
+        "U10.126": "ESTOP_OK",
+        "U10.127": "MCU_WDI",
+        "U10.85": "DRV_WAKE",
+        "U10.117": "PI_PWR_CMD",
+        "U10.97": "PI_PWR_GOOD",
+        "U10.118": "AUX_PWR_EN",
+        "U10.98": "AUX_PWR_GOOD",
+        "U10.139": "I2C1_SCL",
+        "U10.140": "I2C1_SDA",
+        "U10.26": "I_FL",
+        "U10.27": "I_FR",
+        "U10.28": "I_RL",
+        "U10.29": "I_RR",
+        "U10.44": "VBAT_DIV",
+        "U10.45": "VM_DIV",
+        "U10.47": "NTC",
+        "U10.68": "MOTOR_INHIBIT",
+        "U10.123": "CHG_PRESENT",
+        "U10.79": "PWR_ALERT_N",
+        "U10.25": "NRST_B",
+        "R20.1": "3V3_CTRL",
+        "R20.2": "NRST_B",
+        "C37.1": "NRST_B",
+        "C37.2": "GND",
+        "J10.10": "NRST_B"
+      }
+    }
+  },
+  "harness_contract": "physical pin n to pin n at both ends; confirm manufacturer cavity views and continuity before mating",
+  "a_missing_producers": [
+    "ENC_FL_A",
+    "ENC_FL_B",
+    "ENC_FR_A",
+    "ENC_FR_B",
+    "ENC_RL_A",
+    "ENC_RL_B",
+    "ENC_RR_A",
+    "ENC_RR_B",
+    "VBAT_DIV",
+    "VM_DIV",
+    "NTC",
+    "CHG_PRESENT",
+    "PWR_ALERT_N",
+    "I2C1_SCL",
+    "I2C1_SDA"
+  ],
+  "status": "electrical implementation in progress; not full peripheral/placement/manufacturing release"
+}

@@ -1,0 +1,499 @@
+{
+  "archive": "PCB/backups/PCB3_1_routing_complete.epro2",
+  "sha256": "0d7089340678787789de7652c01cb0bdc6373cb634118fbe472926bf14b2973a",
+  "pcb_uuid": "9fb4ea4c3f4a2c99",
+  "mcu": "U10 STM32F429ZGT6",
+  "rows": [
+    {
+      "role": "PWM_FL",
+      "port": "PE9",
+      "package_pin": "60",
+      "archived_net": "PWM_FL",
+      "status": "pass"
+    },
+    {
+      "role": "PWM_FR",
+      "port": "PE11",
+      "package_pin": "64",
+      "archived_net": "PWM_FR",
+      "status": "pass"
+    },
+    {
+      "role": "PWM_RL",
+      "port": "PE13",
+      "package_pin": "66",
+      "archived_net": "PWM_RL",
+      "status": "pass"
+    },
+    {
+      "role": "PWM_RR",
+      "port": "PE14",
+      "package_pin": "67",
+      "archived_net": "PWM_RR",
+      "status": "pass"
+    },
+    {
+      "role": "MOTOR_INHIBIT",
+      "port": "PE15",
+      "package_pin": "68",
+      "archived_net": "MOTOR_INHIBIT",
+      "status": "pass"
+    },
+    {
+      "role": "DIR_FL",
+      "port": "PG0",
+      "package_pin": "56",
+      "archived_net": "DIR_FL",
+      "status": "pass"
+    },
+    {
+      "role": "DIR_FR",
+      "port": "PG1",
+      "package_pin": "57",
+      "archived_net": "DIR_FR",
+      "status": "pass"
+    },
+    {
+      "role": "DIR_RL",
+      "port": "PG2",
+      "package_pin": "87",
+      "archived_net": "DIR_RL",
+      "status": "pass"
+    },
+    {
+      "role": "DIR_RR",
+      "port": "PG3",
+      "package_pin": "88",
+      "archived_net": "DIR_RR",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_FL_A",
+      "port": "PA15",
+      "package_pin": "110",
+      "archived_net": "ENC_FL_A",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_FL_B",
+      "port": "PB3",
+      "package_pin": "133",
+      "archived_net": "ENC_FL_B",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_FR_A",
+      "port": "PA6",
+      "package_pin": "42",
+      "archived_net": "ENC_FR_A",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_FR_B",
+      "port": "PA7",
+      "package_pin": "43",
+      "archived_net": "ENC_FR_B",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_RL_A",
+      "port": "PB6",
+      "package_pin": "136",
+      "archived_net": "ENC_RL_A",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_RL_B",
+      "port": "PB7",
+      "package_pin": "137",
+      "archived_net": "ENC_RL_B",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_RR_A",
+      "port": "PA0",
+      "package_pin": "34",
+      "archived_net": "ENC_RR_A",
+      "status": "pass"
+    },
+    {
+      "role": "ENC_RR_B",
+      "port": "PA1",
+      "package_pin": "35",
+      "archived_net": "ENC_RR_B",
+      "status": "pass"
+    },
+    {
+      "role": "ESP32_TX",
+      "port": "PA9",
+      "package_pin": "101",
+      "archived_net": "ESP_MCU_TX",
+      "status": "pass"
+    },
+    {
+      "role": "ESP32_RX",
+      "port": "PA10",
+      "package_pin": "102",
+      "archived_net": "ESP_MCU_RX",
+      "status": "pass"
+    },
+    {
+      "role": "GNSS_TX",
+      "port": "PD5",
+      "package_pin": "119",
+      "archived_net": "GNSS_TX",
+      "status": "pass"
+    },
+    {
+      "role": "GNSS_RX",
+      "port": "PD6",
+      "package_pin": "122",
+      "archived_net": "GNSS_RX",
+      "status": "pass"
+    },
+    {
+      "role": "LD06_TX",
+      "port": "PD8",
+      "package_pin": "77",
+      "archived_net": "",
+      "status": "optional_unwired"
+    },
+    {
+      "role": "LD06_RX",
+      "port": "PD9",
+      "package_pin": "78",
+      "archived_net": "LD06_RX",
+      "status": "pass"
+    },
+    {
+      "role": "POSE_TX",
+      "port": "PC10",
+      "package_pin": "111",
+      "archived_net": "",
+      "status": "optional_unwired"
+    },
+    {
+      "role": "POSE_RX",
+      "port": "PC11",
+      "package_pin": "112",
+      "archived_net": "",
+      "status": "optional_unwired"
+    },
+    {
+      "role": "PI_TX",
+      "port": "PG14",
+      "package_pin": "129",
+      "archived_net": "PI_TX",
+      "status": "pass"
+    },
+    {
+      "role": "PI_RX",
+      "port": "PG9",
+      "package_pin": "124",
+      "archived_net": "PI_RX",
+      "status": "pass"
+    },
+    {
+      "role": "SBUS_IN",
+      "port": "PF6",
+      "package_pin": "18",
+      "archived_net": "SBUS_IN",
+      "status": "pass"
+    },
+    {
+      "role": "LOG_RX",
+      "port": "PE0",
+      "package_pin": "141",
+      "archived_net": "",
+      "status": "optional_unwired"
+    },
+    {
+      "role": "LOG_TX",
+      "port": "PE1",
+      "package_pin": "142",
+      "archived_net": "",
+      "status": "optional_unwired"
+    },
+    {
+      "role": "IMU_CS",
+      "port": "PB12",
+      "package_pin": "73",
+      "archived_net": "IMU_CS",
+      "status": "pass"
+    },
+    {
+      "role": "IMU_SCK",
+      "port": "PB13",
+      "package_pin": "74",
+      "archived_net": "IMU_SCK",
+      "status": "pass"
+    },
+    {
+      "role": "IMU_MISO",
+      "port": "PB14",
+      "package_pin": "75",
+      "archived_net": "IMU_MISO",
+      "status": "pass"
+    },
+    {
+      "role": "IMU_MOSI",
+      "port": "PB15",
+      "package_pin": "76",
+      "archived_net": "IMU_MOSI",
+      "status": "pass"
+    },
+    {
+      "role": "IMU_DRDY",
+      "port": "PD2",
+      "package_pin": "116",
+      "archived_net": "IMU_DRDY",
+      "status": "pass"
+    },
+    {
+      "role": "I2C1_SCL",
+      "port": "PB8",
+      "package_pin": "139",
+      "archived_net": "I2C1_SCL",
+      "status": "pass"
+    },
+    {
+      "role": "I2C1_SDA",
+      "port": "PB9",
+      "package_pin": "140",
+      "archived_net": "I2C1_SDA",
+      "status": "pass"
+    },
+    {
+      "role": "I_FL",
+      "port": "PC0",
+      "package_pin": "26",
+      "archived_net": "I_FL",
+      "status": "pass"
+    },
+    {
+      "role": "I_FR",
+      "port": "PC1",
+      "package_pin": "27",
+      "archived_net": "I_FR",
+      "status": "pass"
+    },
+    {
+      "role": "I_RL",
+      "port": "PC2",
+      "package_pin": "28",
+      "archived_net": "I_RL",
+      "status": "pass"
+    },
+    {
+      "role": "I_RR",
+      "port": "PC3",
+      "package_pin": "29",
+      "archived_net": "I_RR",
+      "status": "pass"
+    },
+    {
+      "role": "VBAT_DIV",
+      "port": "PC4",
+      "package_pin": "44",
+      "archived_net": "VBAT_DIV",
+      "status": "pass"
+    },
+    {
+      "role": "VM_DIV",
+      "port": "PC5",
+      "package_pin": "45",
+      "archived_net": "VM_DIV",
+      "status": "pass"
+    },
+    {
+      "role": "NTC",
+      "port": "PB1",
+      "package_pin": "47",
+      "archived_net": "NTC",
+      "status": "pass"
+    },
+    {
+      "role": "GNSS_PPS",
+      "port": "PG8",
+      "package_pin": "93",
+      "archived_net": "GNSS_PPS",
+      "status": "pass"
+    },
+    {
+      "role": "LD06_PWM",
+      "port": "PE5",
+      "package_pin": "4",
+      "archived_net": "LD06_PWM",
+      "status": "pass"
+    },
+    {
+      "role": "MOTOR_ARM_REQ",
+      "port": "PG10",
+      "package_pin": "125",
+      "archived_net": "MOTOR_ARM_REQ",
+      "status": "pass"
+    },
+    {
+      "role": "MCU_WDI",
+      "port": "PG12",
+      "package_pin": "127",
+      "archived_net": "MCU_WDI",
+      "status": "pass"
+    },
+    {
+      "role": "ESTOP_OK",
+      "port": "PG11",
+      "package_pin": "126",
+      "archived_net": "ESTOP_OK",
+      "status": "pass"
+    },
+    {
+      "role": "DRV_WAKE",
+      "port": "PD14",
+      "package_pin": "85",
+      "archived_net": "DRV_WAKE",
+      "status": "pass"
+    },
+    {
+      "role": "PI_PWR_CMD",
+      "port": "PD3",
+      "package_pin": "117",
+      "archived_net": "PI_PWR_CMD",
+      "status": "pass"
+    },
+    {
+      "role": "AUX_PWR_EN",
+      "port": "PD4",
+      "package_pin": "118",
+      "archived_net": "AUX_PWR_EN",
+      "status": "pass"
+    },
+    {
+      "role": "PI_PWR_GOOD",
+      "port": "PC7",
+      "package_pin": "97",
+      "archived_net": "PI_PWR_GOOD",
+      "status": "pass"
+    },
+    {
+      "role": "AUX_PWR_GOOD",
+      "port": "PC8",
+      "package_pin": "98",
+      "archived_net": "AUX_PWR_GOOD",
+      "status": "pass"
+    },
+    {
+      "role": "CHG_PRESENT",
+      "port": "PD7",
+      "package_pin": "123",
+      "archived_net": "CHG_PRESENT",
+      "status": "pass"
+    },
+    {
+      "role": "PWR_ALERT_N",
+      "port": "PD10",
+      "package_pin": "79",
+      "archived_net": "PWR_ALERT_N",
+      "status": "pass"
+    },
+    {
+      "role": "PI_READY",
+      "port": "PD0",
+      "package_pin": "114",
+      "archived_net": "PI_READY",
+      "status": "pass"
+    },
+    {
+      "role": "PI_HALTED",
+      "port": "PD1",
+      "package_pin": "115",
+      "archived_net": "PI_HALTED",
+      "status": "pass"
+    },
+    {
+      "role": "PI_SHUTDOWN_REQ",
+      "port": "PC6",
+      "package_pin": "96",
+      "archived_net": "PI_SHUTDOWN_REQ",
+      "status": "pass"
+    },
+    {
+      "role": "LVL_SHIFT_OE",
+      "port": "PD12",
+      "package_pin": "81",
+      "archived_net": "LVL_SHIFT_OE",
+      "status": "pass"
+    },
+    {
+      "role": "SWDIO",
+      "port": "PA13",
+      "package_pin": "105",
+      "archived_net": "SWDIO",
+      "status": "pass"
+    },
+    {
+      "role": "SWCLK",
+      "port": "PA14",
+      "package_pin": "109",
+      "archived_net": "SWCLK",
+      "status": "pass"
+    },
+    {
+      "role": "LD06_PWR_EN",
+      "port": "PD13",
+      "package_pin": "82",
+      "archived_net": "LD06_PWR_EN",
+      "status": "pass"
+    },
+    {
+      "role": "LD06_FAULT_N",
+      "port": "PD11",
+      "package_pin": "80",
+      "archived_net": "LD06_FAULT_N",
+      "status": "pass"
+    },
+    {
+      "role": "FAULT_FL",
+      "port": "PG4",
+      "package_pin": "89",
+      "archived_net": "FAULT_FL",
+      "status": "pass"
+    },
+    {
+      "role": "FAULT_FR",
+      "port": "PG5",
+      "package_pin": "90",
+      "archived_net": "FAULT_FR",
+      "status": "pass"
+    },
+    {
+      "role": "FAULT_RL",
+      "port": "PG6",
+      "package_pin": "91",
+      "archived_net": "FAULT_RL",
+      "status": "pass"
+    },
+    {
+      "role": "FAULT_RR",
+      "port": "PG7",
+      "package_pin": "92",
+      "archived_net": "FAULT_RR",
+      "status": "pass"
+    },
+    {
+      "role": "NRST_B",
+      "port": "NRST",
+      "package_pin": "25",
+      "archived_net": "NRST_B",
+      "status": "pass"
+    }
+  ],
+  "watchdog_connector_55_to_nrst_25": true,
+  "harness": {
+    "signal_positions": 60,
+    "power_positions": 8,
+    "errors": []
+  },
+  "failures": 0,
+  "scope": "Archived PCB2 nets, pin baseline, and GPIO macros; not live EDA or measured wiring."
+}

@@ -1,0 +1,21 @@
+[Unit]
+Description=Mecanum vehicle ROS 2 MAVLink bridge
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=mecanum
+Group=mecanum
+SupplementaryGroups=dialout gpio
+Environment=ROS_DOMAIN_ID=0
+ExecStart=/bin/bash -c 'source /opt/ros/humble/setup.bash && source /opt/mecanum/ros2_ws/install/setup.bash && exec ros2 run mecanum_mavlink bridge --ros-args --params-file /etc/mecanum/vehicle.yaml'
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGINT
+TimeoutStopSec=10
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

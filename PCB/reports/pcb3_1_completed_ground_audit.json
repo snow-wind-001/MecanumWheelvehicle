@@ -1,0 +1,10 @@
+{
+  "groundPads": 207,
+  "missingGroundJoins": 0,
+  "isolatedGroundPads": [],
+  "filledRegions": 73,
+  "pourClearanceViolationCount": 0,
+  "pourClearanceViolations": [],
+  "toleranceMM": 0.002,
+  "note": "Actual native poured geometry; copper joins sampled at 2 um tolerance. NPTH and slots checked separately by the track/drill audit."
+}

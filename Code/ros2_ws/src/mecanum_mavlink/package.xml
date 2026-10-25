@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>mecanum_mavlink</name>
+  <version>0.1.0</version>
+  <description>MAVLink v2 bridge between the Mecanum STM32 rover and ROS 2</description>
+  <maintainer email="maintainers@example.invalid">Mecanum vehicle contributors</maintainer>
+  <license>MIT</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>diagnostic_msgs</exec_depend>
+  <exec_depend>std_srvs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>python3-serial</exec_depend>
+  <!-- READY is claimed through the Linux GPIO character device. -->
+  <exec_depend>python3-libgpiod</exec_depend>
+  <!-- pymavlink is not a ROS package; install it into the runtime environment:
+       python3 -m pip install pymavlink -->
+  <export><build_type>ament_python</build_type></export>
+</package>

@@ -1,0 +1,13 @@
+{
+  "counts": {
+    "tracks": 3210,
+    "vias": 335,
+    "pads": 816
+  },
+  "holes": 384,
+  "summary": {},
+  "detail": {},
+  "passed": true,
+  "toleranceMM": 0.002,
+  "scope": "Tracks, vias, all raw API pads, positive ROUND drills and outline; pour-fill clearances and footprint slot regions require separate validation."
+}

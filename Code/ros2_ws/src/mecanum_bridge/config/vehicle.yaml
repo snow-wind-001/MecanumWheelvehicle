@@ -1,0 +1,33 @@
+mecanum_bridge:
+  ros__parameters:
+    port: /dev/serial0
+    baud: 921600
+    # Raspberry Pi 4 BCM GPIO controller. Verify with gpioinfo before deployment.
+    ready_gpiochip: /dev/gpiochip0
+    base_frame: base_link
+    odom_frame: odom
+    imu_frame: imu_link
+    gnss_frame: gnss_link
+    lidar_frame: lidar_link
+    lidar_bins: 450
+    lidar_min_m: 0.02
+    lidar_max_m: 12.0
+    lidar_offset_rad: 0.0
+    publish_tf: true
+    # REQUIRED measured geometry and quadrature counts per output revolution.
+    # Zero values deliberately prevent configuring/arming the physical vehicle.
+    radius_m: 0.0
+    half_length_m: 0.0
+    half_width_m: 0.0
+    counts_per_rev: 0
+    encoder_sign: [1, 1, 1, 1]
+    motor_sign: [1, 1, 1, 1]
+    # Initial bench limits and PI gains; tune with wheels lifted before driving.
+    max_wheel_rad_s: 10.0
+    max_wheel_accel_rad_s2: 20.0
+    kp: 0.02
+    ki: 0.1
+    feedforward: 0.0
+    duty_limit: 0.2
+    speed_filter_s: 0.01
+    reversal_rad_s: 0.5

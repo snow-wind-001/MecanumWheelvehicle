@@ -1,0 +1,7 @@
+# Raspberry Pi 4 only. Merge into the image's active config.txt after review.
+enable_uart=1
+dtoverlay=disable-bt
+# READY remains low until the ROS bridge owns GPIO17 and has fresh MCU traffic.
+gpio=17=ip,pd
+# PC6 HIGH -> AO3400A pulls GPIO27 LOW -> Linux KEY_POWER.
+dtoverlay=gpio-shutdown,gpio_pin=27,active_low=1,gpio_pull=up

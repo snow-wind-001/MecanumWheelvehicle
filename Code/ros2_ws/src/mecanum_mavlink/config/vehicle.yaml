@@ -1,0 +1,53 @@
+mecanum_mavlink:
+  ros__parameters:
+    # STM32 USART6 link on the Raspberry Pi. On a Pi 4/5 with the standard
+    # image this is /dev/serial0 with the console disabled (raspi-config).
+    port: /dev/serial0
+    baud: 921600
+    target_system: 1
+    target_component: 1
+    source_system: 255
+    source_component: 191
+    setpoint_rate_hz: 20.0
+    imu_rate_hz: 50.0
+    odom_rate_hz: 20.0
+    command_timeout_s: 0.5
+    max_speed_mps: 1.0
+    max_yaw_rate_rad_s: 2.0
+    heartbeat_timeout_s: 2.0
+    # READY (BCM GPIO17) is a hardware interlock: the firmware refuses PI
+    # authority while it is low. The MAVLink node owns that line. Verify the
+    # chip path with `gpioinfo` on the target image before deployment; an empty
+    # value disables the interlock and must not be used on the vehicle.
+    ready_gpiochip: /dev/gpiochip0
+    command_ack_timeout_s: 1.0
+    publish_tf: true
+    odom_frame: odom
+    base_frame: base_link
+    imu_frame: imu_link
+
+    autoconfigure: true
+    # REQUIRED measured geometry and encoder counts. The zeros deliberately
+    # fail the firmware's vc_config_valid() check, so the vehicle refuses to
+    # arm until these match the real hardware. Measure them; do not guess.
+    calibration:
+      radius_m: 0.0
+      half_length_m: 0.0
+      half_width_m: 0.0
+      counts_per_rev: 0
+      encoder_sign_0: 1
+      encoder_sign_1: 1
+      encoder_sign_2: 1
+      encoder_sign_3: 1
+      motor_sign_0: 1
+      motor_sign_1: 1
+      motor_sign_2: 1
+      motor_sign_3: 1
+      max_wheel_rad_s: 20.0
+      max_wheel_accel_rad_s2: 100.0
+      wheel_kp: 0.1
+      wheel_ki: 0.2
+      feedforward: 0.02
+      duty_limit: 0.5
+      speed_filter_s: 0.01
+      reversal_rad_s: 0.5

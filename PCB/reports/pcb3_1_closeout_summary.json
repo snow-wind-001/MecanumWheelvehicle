@@ -1,0 +1,374 @@
+{
+  "status": "routing_complete_stop",
+  "boardUuid": "d5bab27b5a49d1b7",
+  "tracks": 3210,
+  "vias": 335,
+  "pads": 816,
+  "components": 234,
+  "signalMissing": 0,
+  "signalOrphans": 0,
+  "groundMissing": 0,
+  "groundPads": 207,
+  "geometryViolations": {},
+  "pourClearanceViolations": 0,
+  "mountTrackViaViolations": [],
+  "padNetMapUnchanged": true,
+  "componentMoves": [
+    {
+      "ref": "C60",
+      "dxMM": 0.0,
+      "dyMM": 0.5000000000000018,
+      "rotationBefore": 0,
+      "rotationAfter": 0
+    },
+    {
+      "ref": "U8",
+      "dxMM": -0.29999939999999803,
+      "dyMM": 0.0,
+      "rotationBefore": 0,
+      "rotationAfter": 0
+    },
+    {
+      "ref": "C82",
+      "dxMM": 1.499999540000001,
+      "dyMM": 0.2999994000000038,
+      "rotationBefore": 180,
+      "rotationAfter": 90
+    }
+  ],
+  "intentionalPadVias": [
+    {
+      "viaId": "9a172470c9837696",
+      "ref": "U5.48",
+      "net": "MOT_FL-",
+      "padNet": "MOT_FL-",
+      "xyMM": [
+        19.517276179999993,
+        26.50000796
+      ],
+      "holeMM": 0.30479999999999996
+    },
+    {
+      "viaId": "9a172470c9837696",
+      "ref": "U5.47",
+      "net": "MOT_FL-",
+      "padNet": "MOT_FL-",
+      "xyMM": [
+        19.517276179999993,
+        26.50000796
+      ],
+      "holeMM": 0.30479999999999996
+    },
+    {
+      "viaId": "6bd709586e9e3ae1",
+      "ref": "U6.37",
+      "net": "MOT_RR-",
+      "padNet": "MOT_RR-",
+      "xyMM": [
+        49.51853698000001,
+        26.50000796
+      ],
+      "holeMM": 0.30479999999999996
+    },
+    {
+      "viaId": "6bd709586e9e3ae1",
+      "ref": "U6.38",
+      "net": "MOT_RR-",
+      "padNet": "MOT_RR-",
+      "xyMM": [
+        49.51853698000001,
+        26.50000796
+      ],
+      "holeMM": 0.30479999999999996
+    },
+    {
+      "viaId": "e1ac188c58a329c6",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        45.800000000000026,
+        29.599999999999998
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "cafa4951d5c576d5",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        46.40000000000003,
+        29.599999999999998
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "8f8bb5b00de4a693",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        45.40000000000001,
+        31.199999999999992
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "88b1613a7753af9f",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        47.80000000000005,
+        30.199999999999992
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "4c509d75591d3409",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        49.20000000000007,
+        32.19999999999999
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "77a3cf8042aef912",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        20.8,
+        28.8
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "3635c4c5e8c8df14",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        20.4,
+        29.399999999999995
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "c29ef82f412b048f",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        20.8,
+        31.799999999999986
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "9bfd879429a1c69a",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        21.199999999999996,
+        28.4
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "a40cb18e1559347c",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        22.79999999999999,
+        29.999999999999993
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "0e0767bad808829c",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        22.99999999999999,
+        31.399999999999984
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "66bcfc401c09d915",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        21.199999999999996,
+        27.8
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "0c13ff767cd4b5c8",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        23.599999999999987,
+        31.399999999999984
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "56318820485cc99b",
+      "ref": "U5.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        22.99999999999999,
+        31.99999999999999
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "917e1bea8949b3bb",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        45.34999999999984,
+        32.54999999999999
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "cfba0541716eb43f",
+      "ref": "C93.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        49.30000046,
+        39.99997588
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "a6a8809723dab9b7",
+      "ref": "U19.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        57.149095759999994,
+        31.999999499999998
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "4a1239b6dcb1a71b",
+      "ref": "U7.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        41.99999982,
+        16.949961019999996
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "038c01d379cb35b7",
+      "ref": "R63.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        48.499999519999996,
+        27.746634880000002
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "038c01d379cb35b7",
+      "ref": "U6.49",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        48.499999519999996,
+        27.746634880000002
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "1b062ab86690232e",
+      "ref": "U4.1",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        65.84992163999999,
+        40.212507839999994
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "6588bf8e24610b70",
+      "ref": "U13.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        63.999998999999995,
+        26.85090388
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "ce6bf97f17a4eae7",
+      "ref": "R65.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        51.7533636,
+        29.49999942
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "1d7403764d2919df",
+      "ref": "U8.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        37.64995966,
+        31.999999499999998
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "49ba909f87da5d30",
+      "ref": "C82.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        54.7,
+        26.200024
+      ],
+      "holeMM": 0.2032
+    },
+    {
+      "viaId": "70fe4b7e3c782561",
+      "ref": "C89.2",
+      "net": "GND",
+      "padNet": "GND",
+      "xyMM": [
+        53.74999918,
+        27.29997588
+      ],
+      "holeMM": 0.2032
+    }
+  ],
+  "illegalPadDrills": [],
+  "nativeDrcReportAvailable": false,
+  "evidence": "Saved native copper and fresh native poured geometry; geometric tolerance 0.002 mm."
+}

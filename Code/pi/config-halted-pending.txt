@@ -1,0 +1,4 @@
+# Enable ONLY after the A latch + MCU HALTED-to-cut sequence is verified on hardware.
+# GPIO22 belongs to the kernel, never to a Python/Systemd stop hook.
+# Kernel poweroff expects an external power cut after its initial HIGH pulse.
+dtoverlay=gpio-poweroff,gpiopin=22,timeout_ms=10000

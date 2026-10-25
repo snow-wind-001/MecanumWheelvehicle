@@ -1,0 +1,10 @@
+{
+  "elf": "Code/MecanumB_Control/build/MecanumB_Control.elf",
+  "binary_bytes": 78844,
+  "binary_sha256": "85e243b022f755a2f1b5b06f409f186e910458fe5be3534db99db7d14df325ff",
+  "ram_erase_address": "0x20000098",
+  "ram_erase_bytes": 228,
+  "ram_erase_call_instructions": [],
+  "errors": [],
+  "scope": "Linked-image static checks; no Flash, watchdog or power-loss hardware experiment."
+}
